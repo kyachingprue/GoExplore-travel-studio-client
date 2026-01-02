@@ -33,21 +33,21 @@ const DashboardLayout = () => {
 
   const userRoutes = [
     { name: "Overview", to: "/dashboard/overview", icon: LayoutDashboard },
-    { name: "My Bookings", to: "bookings", icon: BookOpen },
-    { name: "Payments", to: "payments", icon: CreditCard },
-    { name: "Reviews & Ratings", to: "reviews", icon: Star },
-    { name: "Wishlist", to: "wishlist", icon: Heart },
+    { name: "My Bookings", to: "/dashboard/bookings", icon: BookOpen },
+    { name: "Payments", to: "/dashboard/payments", icon: CreditCard },
+    { name: "Reviews & Ratings", to: "/dashboard/reviews", icon: Star },
+    { name: "Wishlist", to: "/dashboard/wishlist", icon: Heart },
     { name: "My Profile", to: "/profile", icon: User },
   ];
 
   const adminRoutes = [
-    { name: "Analytics", to: "analytics", icon: BarChart3 },
-    { name: "Manage Packages", to: "packages", icon: Package },
-    { name: "Manage Bookings", to: "manage-bookings", icon: BookOpen },
-    { name: "Manage Users", to: "users", icon: Users },
-    { name: "Payments", to: "payments", icon: CreditCard },
-    { name: "Reviews", to: "reviews", icon: MessageSquare },
-    { name: "Blogs / Experience", to: "blogs", icon: PenTool },
+    { name: "Analytics", to: "/dashboard/admin/analytics", icon: BarChart3 },
+    { name: "Manage Packages", to: "/dashboard/admin/packages", icon: Package },
+    { name: "Manage Bookings", to: "/dashboard/admin/manage-bookings", icon: BookOpen },
+    { name: "Manage Users", to: "/dashboard/admin/users", icon: Users },
+    { name: "Payments", to: "/dashboard/admin/payments", icon: CreditCard },
+    { name: "Reviews", to: "/dashboard/admin/reviews", icon: MessageSquare },
+    { name: "Blogs / Experience", to: "/dashboard/admin/blogs", icon: PenTool },
   ];
 
   const routes = isAdmin ? adminRoutes : userRoutes;

@@ -13,6 +13,17 @@ import DashboardLayout from "../layout/DashboardLayout";
 import Profile from "../pages/Profile";
 import PackageCardDetails from "../components/packages/PackageCardDetails";
 import Overview from "../dashboard/users/Overview";
+import MyBookings from "../dashboard/users/MyBookings";
+import Payments from "../dashboard/users/Payments";
+import Reviews from "../dashboard/users/Reviews";
+import WishList from "../dashboard/users/WishList";
+import Analytics from "../dashboard/admin/Analytics";
+import ManagePackages from "../dashboard/admin/ManagePackages";
+import ManageBookings from "../dashboard/admin/ManageBookings";
+import ManageUsers from "../dashboard/admin/ManageUsers";
+import AdminPayments from "../dashboard/admin/AdminPayments";
+import AdminReviews from "../dashboard/admin/AdminReviews";
+import AdminBlogs from "../dashboard/admin/AdminBlogs";
 
 const router = createBrowserRouter([
   {
@@ -50,9 +61,55 @@ const router = createBrowserRouter([
     path: '/dashboard',
     element: <DashboardLayout />,
     children: [
+      //User Dashboard
       {
         path: 'overview',
         element: <Overview/>
+      },
+      {
+        path: 'bookings',
+        element: <MyBookings/>
+      },
+      {
+        path: 'payments',
+        element: <Payments/>
+      },
+      {
+        path: 'reviews',
+        element: <Reviews/>
+      },
+      {
+        path: 'wishlist',
+        element: <WishList/>
+      },
+      //Admin Dashboard
+      {
+        path: 'admin/analytics',
+        element: <Analytics/>
+      },
+      {
+        path: 'admin/packages',
+        element: <ManagePackages/>
+      },
+      {
+        path: 'admin/manage-bookings',
+        element: <ManageBookings/>
+      },
+      {
+        path: 'admin/users',
+        element: <ManageUsers/>
+      },
+      {
+        path: 'admin/payments',
+        element: <AdminPayments/>
+      },
+      {
+        path: 'admin/reviews',
+        element: <AdminReviews/>
+      },
+      {
+        path: 'admin/blogs',
+        element: <AdminBlogs/>
       }
     ]
   },
