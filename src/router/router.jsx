@@ -11,6 +11,8 @@ import VerifyEmail from "../authentication/VerifyEmail";
 import ForgetPassword from "../authentication/ForgetPassword";
 import DashboardLayout from "../layout/DashboardLayout";
 import Profile from "../pages/Profile";
+import PackageCardDetails from "../components/packages/PackageCardDetails";
+import Overview from "../dashboard/users/Overview";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +33,10 @@ const router = createBrowserRouter([
         element: <Packages/>
       },
       {
+        path: "packages/:id",
+        element: <PackageCardDetails/>
+      },
+      {
         path: 'experience',
         element: <Experience/>
       },
@@ -42,7 +48,13 @@ const router = createBrowserRouter([
   },
   {
     path: '/dashboard',
-    element: <DashboardLayout/>
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: 'overview',
+        element: <Overview/>
+      }
+    ]
   },
   {
     path: '/login',

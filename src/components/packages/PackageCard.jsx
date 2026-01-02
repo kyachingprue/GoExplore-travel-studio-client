@@ -1,8 +1,10 @@
 import { motion } from "motion/react";
 import { MapPin, Clock, Star, Plane } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const PackageCard = ({ pkg }) => {
   const {
+    id,
     title,
     country,
     location,
@@ -103,14 +105,16 @@ const PackageCard = ({ pkg }) => {
             </span>
           </p>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-5 py-2 rounded-full text-sm font-medium bg-linear-to-r from-gray-700 to-gray-900 text-white flex items-center gap-2"
-          >
-            <Plane size={16} />
-            View Details
-          </motion.button>
+          <Link to={`/packages/${id}`}>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-5 py-2 rounded-full text-sm font-medium bg-linear-to-r from-gray-700 to-gray-900 text-white flex items-center gap-2"
+            >
+              <Plane size={16} />
+              View Details
+            </motion.button>
+          </Link>
         </div>
       </div>
     </motion.div>
