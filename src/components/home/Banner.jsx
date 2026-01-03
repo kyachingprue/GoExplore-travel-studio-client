@@ -52,7 +52,6 @@ const Banner = () => {
             and unforgettable adventures designed for modern travelers.
           </p>
 
-          {/* CTA Buttons */}
           <div className="mt-8 flex flex-wrap gap-4">
             <Link to="/packages">
               <button className="px-8 py-3 rounded-xl flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold transition">

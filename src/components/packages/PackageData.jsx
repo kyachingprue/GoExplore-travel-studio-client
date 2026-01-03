@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import PackageCard from "./PackageCard";
 
 const ITEMS_PER_PAGE = 8;
@@ -10,27 +11,42 @@ const PackageData = () => {
   const [activeCountry, setActiveCountry] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
 
+  const location = useLocation();
+
   // fetch data
   useEffect(() => {
     fetch("/data.json")
       .then((res) => res.json())
       .then((data) => {
         setPackages(data);
-        setFilteredPackages(data);
 
         const uniqueCountries = [
           "All",
           ...new Set(data.map((item) => item.country)),
         ];
         setCountries(uniqueCountries);
+
+        // 🔥 URL country filter
+        const params = new URLSearchParams(location.search);
+        const countryFromURL = params.get("country");
+
+        if (countryFromURL) {
+          const filtered = data.filter(
+            (item) => item.country === countryFromURL
+          );
+          setFilteredPackages(filtered);
+          setActiveCountry(countryFromURL);
+        } else {
+          setFilteredPackages(data);
+        }
       })
       .catch((error) => console.error("Data fetch error:", error));
-  }, []);
+  }, [location.search]);
 
-  // filter by country
+  // filter by country (button click)
   const handleCountryFilter = (country) => {
     setActiveCountry(country);
-    setCurrentPage(1); // reset page
+    setCurrentPage(1);
 
     if (country === "All") {
       setFilteredPackages(packages);
@@ -78,7 +94,7 @@ const PackageData = () => {
             onClick={() => handleCountryFilter(country)}
             className={`px-5 py-2 rounded-full text-sm font-medium transition
               ${activeCountry === country
-              ? "bg-linear-to-r from-gray-700 to-gray-900 text-white"
+                ? "bg-linear-to-r from-gray-700 to-gray-900 text-white"
                 : "bg-white hover:bg-gray-200 text-gray-700"
               }`}
           >
@@ -125,7 +141,7 @@ const PackageData = () => {
                     onClick={() => setCurrentPage(page)}
                     className={`w-10 h-10 rounded-full font-medium transition
                       ${currentPage === page
-                      ? "bg-linear-to-r from-sky-400 to-sky-600 text-white shadow"
+                        ? "bg-linear-to-r from-sky-400 to-sky-600 text-white shadow"
                         : "bg-white text-gray-700 hover:bg-gray-100"
                       }`}
                   >
