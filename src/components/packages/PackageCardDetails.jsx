@@ -9,6 +9,7 @@ import {
   Plane,
   ArrowLeft,
   ShoppingCart,
+  Bookmark,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -117,7 +118,7 @@ const PackageCardDetails = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate(-1)}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-linear-to-r from-gray-200 to-gray-300 text-gray-800 font-medium"
+              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-linear-to-r from-purple-400 via-blue-500 to-sky-500 text-white font-medium"
             >
               <ArrowLeft size={18} />
               Go Back
@@ -130,6 +131,25 @@ const PackageCardDetails = () => {
             >
               <ShoppingCart size={18} />
               Add To Cart
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.95 }}
+              className="group flex items-center gap-2 px-5 py-2.5 rounded-xl
+             bg-linear-to-r from-sky-500 via-blue-500 to-indigo-600
+             text-white font-semibold shadow-lg
+             hover:shadow-xl transition-all duration-300"
+            >
+              <motion.span
+                initial={{ rotate: 0 }}
+                whileHover={{ rotate: -10 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="flex items-center justify-center"
+              >
+                <Bookmark className="w-5 h-5 group-hover:fill-white transition-all" />
+              </motion.span>
+
+              <span className="tracking-wide">Bookmark</span>
             </motion.button>
           </div>
         </motion.div>

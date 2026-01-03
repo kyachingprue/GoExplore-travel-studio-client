@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Search, PlaneTakeoff, MapPin } from "lucide-react";
+import { Search, PlaneTakeoff, MapPin, Plane } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Banner = () => {
@@ -55,8 +55,8 @@ const Banner = () => {
           {/* CTA Buttons */}
           <div className="mt-8 flex flex-wrap gap-4">
             <Link to="/packages">
-              <button className="px-8 py-3 rounded-xl bg-yellow-400 hover:bg-yellow-500 text-black font-semibold transition">
-                Explore Tours
+              <button className="px-8 py-3 rounded-xl flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold transition">
+                <Plane/> Explore Package
               </button>
             </Link>
             <button className="px-8 py-3 rounded-xl border border-white text-white hover:bg-white hover:text-black transition">
