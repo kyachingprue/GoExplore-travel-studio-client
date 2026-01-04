@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { motion } from 'motion/react';
 import {
   LayoutDashboard,
   User,
@@ -8,6 +9,9 @@ import {
 } from "lucide-react";
 import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
+import useAxiosSecure from "../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
+import LoadingSpinner from "./LoadingSpinner";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -16,6 +20,7 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [show, setShow] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const axiosSecure = useAxiosSecure();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,7 +36,47 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  const handleLogout = async() => {
+  const { data: userDB, isLoading } = useQuery({
+    queryKey: ["mongoUser", user?.email],
+    queryFn: async () => {
+      if (!user?.email) return null;
+      const res = await axiosSecure.get(`/users/email/${user?.email}`);
+      return res.data;
+    },
+    enabled: !!user?.email,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const { data: cartCount } = useQuery({
+    queryKey: ["cartCount", user?.email],
+    enabled: !!user,
+    queryFn: async () => {
+      const res = await axiosSecure.get(
+        `/myPackage/count/${user.email}`
+      );
+      return res.data;
+    },
+  });
+
+  if (isLoading) {
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="flex items-center justify-between px-6 py-4"
+    >
+      <div className="h-6 w-32 rounded-md bg-slate-200 animate-pulse" />
+      <div className="hidden md:flex items-center gap-6">
+        <div className="h-4 w-20 rounded bg-slate-200 animate-pulse" />
+        <div className="h-4 w-24 rounded bg-slate-200 animate-pulse" />
+        <div className="h-4 w-16 rounded bg-slate-200 animate-pulse" />
+      </div>
+
+      <div className="h-8 w-24 rounded-full bg-slate-200 animate-pulse" />
+    </motion.div>
+  }
+
+  const handleLogout = async () => {
     await logoutUser();
     toast.success("User Logout🏞️")
     setProfileOpen(false);
@@ -80,9 +125,15 @@ const Navbar = () => {
           {/* Travel Card */}
           {user && <button
             onClick={() => navigate("/dashboard")}
-            className="bg-white/20 hover:bg-white/30 p-2 rounded-xl"
+            className="relative bg-white/20 hover:bg-white/30 p-2 rounded-xl"
           >
             <LayoutDashboard />
+            {cartCount?.count > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white
+      text-xs px-1.5 rounded-full">
+                {cartCount.count}
+              </span>
+            )}
           </button>}
 
           {/* Auth desktop */}
@@ -96,7 +147,7 @@ const Navbar = () => {
           ) : (
             <div className="relative">
               <img
-                src={user?.photoURL}
+                src={userDB?.profileImage || "/default-avatar.png"}
                 className="w-10 h-10 rounded-full object-cover cursor-pointer border-2 border-white"
                 onClick={() => setProfileOpen(!profileOpen)}
               />
@@ -133,7 +184,7 @@ const Navbar = () => {
 
           {user && (<div className="relative">
             <img
-              src={user?.photoURL}
+              src={userDB?.profileImage || "/default-avatar.png"}
               className="w-8 h-8 rounded-full object-cover cursor-pointer border-2 border-white"
               onClick={() => setProfileOpen(!profileOpen)}
             />
@@ -158,7 +209,7 @@ const Navbar = () => {
 
           {/* 3 dot menu */}
           <button onClick={() => setMenuOpen(!menuOpen)}>
-            <MoreVertical className="text-white"/>
+            <MoreVertical className="text-white" />
           </button>
         </div>
       </div>

@@ -44,7 +44,7 @@ const router = createBrowserRouter([
         element: <Packages/>
       },
       {
-        path: "packages/:id",
+        path: "packages/:_id",
         element: <PackageCardDetails/>
       },
       {

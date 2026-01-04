@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const PackageCard = ({ pkg }) => {
   const {
-    id,
+    _id,
     title,
     country,
     location,
@@ -105,7 +105,7 @@ const PackageCard = ({ pkg }) => {
             </span>
           </p>
 
-          <Link to={`/packages/${id}`}>
+          <Link to={`/packages/${_id}`}>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

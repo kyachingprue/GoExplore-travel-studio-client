@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import PackageCard from "./PackageCard";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
+import { useQuery } from "@tanstack/react-query";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -10,38 +12,46 @@ const PackageData = () => {
   const [countries, setCountries] = useState([]);
   const [activeCountry, setActiveCountry] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
+  const axiosPublic = useAxiosPublic();
 
   const location = useLocation();
 
-  // fetch data
+  const { data = [], isLoading, isError } = useQuery({
+    queryKey: ["packages"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/packages");
+      return res.data;
+    },
+  });
+
   useEffect(() => {
-    fetch("/data.json")
-      .then((res) => res.json())
-      .then((data) => {
-        setPackages(data);
+    if (!data.length) return;
 
-        const uniqueCountries = [
-          "All",
-          ...new Set(data.map((item) => item.country)),
-        ];
-        setCountries(uniqueCountries);
+    setPackages(data);
 
-        // 🔥 URL country filter
-        const params = new URLSearchParams(location.search);
-        const countryFromURL = params.get("country");
+    const uniqueCountries = [
+      "All",
+      ...new Set(data.map((item) => item.country)),
+    ];
+    setCountries(uniqueCountries);
 
-        if (countryFromURL) {
-          const filtered = data.filter(
-            (item) => item.country === countryFromURL
-          );
-          setFilteredPackages(filtered);
-          setActiveCountry(countryFromURL);
-        } else {
-          setFilteredPackages(data);
-        }
-      })
-      .catch((error) => console.error("Data fetch error:", error));
-  }, [location.search]);
+    // 🔥 URL country filter
+    const params = new URLSearchParams(location.search);
+    const countryFromURL = params.get("country");
+
+    if (countryFromURL) {
+      const filtered = data.filter(
+        (item) => item.country === countryFromURL
+      );
+      setFilteredPackages(filtered);
+      setActiveCountry(countryFromURL);
+    } else {
+      setFilteredPackages(data);
+      setActiveCountry("All");
+    }
+
+    setCurrentPage(1);
+  }, [data, location.search]);
 
   // filter by country (button click)
   const handleCountryFilter = (country) => {
@@ -56,6 +66,14 @@ const PackageData = () => {
       );
     }
   };
+
+  if (isLoading) {
+    return <div className="text-center py-10">Loading packages...</div>;
+  }
+
+  if (isError) {
+    return <div className="text-center py-10 text-red-500">Failed to load data</div>;
+  }
 
   // pagination logic
   const totalPages = Math.ceil(filteredPackages.length / ITEMS_PER_PAGE);
@@ -112,7 +130,7 @@ const PackageData = () => {
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {currentItems.map((pkg) => (
-              <PackageCard key={pkg.id} pkg={pkg} />
+              <PackageCard key={pkg._id} pkg={pkg} />
             ))}
           </div>
 

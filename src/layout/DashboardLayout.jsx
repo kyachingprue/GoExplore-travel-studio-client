@@ -19,13 +19,25 @@ import {
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
+import useAxiosSecure from "../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 const DashboardLayout = () => {
   const { user, logoutUser } = useAuth();
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
 
-  // DEFAULT ROLE SYSTEM
-  const role = user?.role || "user"; // user | admin
+
+  const { data: dbUser, isLoading } = useQuery({
+    queryKey: ["userRole", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users/email/${user.email}`);
+      return res.data;
+    },
+  });
+
+  const role = dbUser?.role || "user";
   const isAdmin = role === "admin";
 
   const [collapsed, setCollapsed] = useState(false);
@@ -51,6 +63,24 @@ const DashboardLayout = () => {
   ];
 
   const routes = isAdmin ? adminRoutes : userRoutes;
+
+  if (isLoading) {
+    return <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="flex items-center justify-between px-6 py-4"
+    >
+      <div className="h-6 w-32 rounded-md bg-slate-200 animate-pulse" />
+      <div className="hidden md:flex items-center gap-6">
+        <div className="h-4 w-20 rounded bg-slate-200 animate-pulse" />
+        <div className="h-4 w-24 rounded bg-slate-200 animate-pulse" />
+        <div className="h-4 w-16 rounded bg-slate-200 animate-pulse" />
+      </div>
+
+      <div className="h-8 w-24 rounded-full bg-slate-200 animate-pulse" />
+    </motion.div>
+  }
 
   const handleUserLogout = async () => {
     await logoutUser()
@@ -102,11 +132,10 @@ const DashboardLayout = () => {
           </NavLink>
         ))}
 
-        {/* Logout */}
         <button
           onClick={handleUserLogout}
           className="flex items-center gap-3 px-4 py-3 rounded-xl
-        hover:bg-red-500/20 mt-4 w-full"
+        hover:bg-red-500 mt-4 w-full"
         >
           <LogOut size={20} />
           {!collapsed && <span>Logout</span>}
@@ -161,9 +190,9 @@ const DashboardLayout = () => {
 
           <div className="flex items-center gap-3">
             <img
-              src={user?.photoURL || "https://i.ibb.co/4pDNDk1/avatar.png"}
+              src={dbUser?.profileImage || "https://i.ibb.co/4pDNDk1/avatar.png"}
               alt="user"
-              className="w-10 h-10 rounded-full border-2 border-white"
+              className="w-10 h-10 rounded-full border-2 border-white object-cover"
             />
           </div>
         </header>

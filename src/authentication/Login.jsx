@@ -6,11 +6,14 @@ import { Loader2 } from "lucide-react";
 import useAuth from "../hooks/useAuth";
 import GoogleLoginButton from "./GoogleLoginButton";
 import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 
 const Login = () => {
   const { loginUser,user, loginWithGoogle, } = useAuth();
   const [btnLoading, setBtnLoading] = useState(false);
   const navigate = useNavigate();
+  const axiosPublic = useAxiosPublic();
 
   const {
     register,
@@ -18,24 +21,33 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
+  const { mutateAsync: updateVerify } = useMutation({
+    mutationFn: async (email) => {
+      const res = await axiosPublic.patch("/users/verify", { email });
+      return res.data;
+    },
+  });
+
   const onSubmit = async (data) => {
     setBtnLoading(true);
     try {
-      await loginUser(data.email, data.password);
+      // 1️⃣ Login user from Firebase
+      const loggedUser = await loginUser(data.email, data.password);
 
-      if (!user.emailVerified) {
-        toast.error("Please verify your email before logging in.");
+      // 2️⃣ Check Firebase email verification
+      if (!loggedUser.emailVerified) {
+        toast.error("Please verify your email first!");
         setBtnLoading(false);
         return;
       }
+
+      // 3️⃣ After Firebase verified, update MongoDB
+      await axiosPublic.patch("/users/verify", { email: loggedUser.email });
+
       toast.success("Login successful!");
       navigate("/");
     } catch (error) {
-      if (error.message.includes("not verified")) {
-        toast.error("Please verify your email before logging in!");
-      } else {
-        toast.error(error.message);
-      }
+      toast.error(error.message || "Login failed!");
     }
     setBtnLoading(false);
   };

@@ -11,25 +11,94 @@ import {
   ShoppingCart,
   Bookmark,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import LoadingSpinner from "../LoadingSpinner";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useAuth from "../../hooks/useAuth";
+import toast from "react-hot-toast";
 
 const PackageCardDetails = () => {
-  const { id } = useParams();
+  const { _id } = useParams();
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const [packages, setPackages] = useState([])
+  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    fetch('/data.json')
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-        setPackages(data)
-    })
-  },[])
+  const { data: packageData, isLoading } = useQuery({
+    queryKey: ["package", _id],
+    queryFn: async () => {
+      const res = await axiosPublic.get(`/packages/${_id}`);
+      return res.data;
+    },
+  });
 
-  const packageData = packages.find(
-    (item) => item.id === Number(id)
-  );
+  //Add To Card API
+  const addToCartMutation = useMutation({
+    mutationFn: async () => {
+      return axiosSecure.post("/myPackage", {
+        userEmail: user.email,
+        packageId: _id,
+        title: packageData.title,
+        price: packageData.price,
+        image: packageData.image,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["cartCheck"]);
+      queryClient.invalidateQueries(["cartCount"]);
+      toast.success("Added to Cart ✅");
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Failed to add to cart ❌");
+    },
+  });
+
+  const { data: cartStatus } = useQuery({
+    queryKey: ["cartCheck", user?.email, _id],
+    enabled: !!user,
+    queryFn: async () => {
+      const res = await axiosSecure.get(
+        `/myPackage/check?email=${user.email}&packageId=${_id}`
+      );
+      return res.data;
+    },
+  });
+
+  //Bookmark API
+  const bookmarkMutation = useMutation({
+    mutationFn: async () => {
+      return axiosSecure.post("/bookmark", {
+        userEmail: user.email,
+        packageId: _id,
+        title: packageData.title,
+        image: packageData.image,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["bookmarkCheck"]);
+      toast.success("Bookmarked successfully ⭐");
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Failed to bookmark ❌");
+    },
+  });
+
+  const { data: bookmarkStatus } = useQuery({
+    queryKey: ["bookmarkCheck", user?.email, _id],
+    enabled: !!user,
+    queryFn: async () => {
+      const res = await axiosSecure.get(
+        `/bookmark/check?email=${user.email}&packageId=${_id}`
+      );
+      return res.data;
+    },
+  });
+
+  if (isLoading) {
+    return <LoadingSpinner/>
+  }
 
   if (!packageData) {
     return (
@@ -125,31 +194,41 @@ const PackageCardDetails = () => {
             </motion.button>
 
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold bg-linear-to-r from-sky-500 via-blue-500 to-cyan-500 shadow-lg"
+              disabled={cartStatus?.exists || addToCartMutation.isLoading}
+              onClick={() => addToCartMutation.mutate()}
+              className={`px-6 py-3 flex items-center gap-2 rounded-xl text-white font-semibold
+                  ${cartStatus?.exists
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-linear-to-r from-sky-500 via-blue-500 to-cyan-500"}`}
+              whileHover={{ scale: 1.08, y: -2 }}  // increase size slightly & lift up
+              whileTap={{ scale: 0.95 }}           // press down effect
+              transition={{ type: "spring", stiffness: 300 }}
             >
               <ShoppingCart size={18} />
-              Add To Cart
+              {cartStatus?.exists
+                ? "Added"
+                : addToCartMutation.isLoading
+                  ? "Adding..."
+                  : "Add To Cart"}
             </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.95 }}
-              className="group flex items-center gap-2 px-5 py-2.5 rounded-xl
-             bg-linear-to-r from-sky-500 via-blue-500 to-indigo-600
-             text-white font-semibold shadow-lg
-             hover:shadow-xl transition-all duration-300"
-            >
-              <motion.span
-                initial={{ rotate: 0 }}
-                whileHover={{ rotate: -10 }}
-                transition={{ type: "spring", stiffness: 300 }}
-                className="flex items-center justify-center"
-              >
-                <Bookmark className="w-5 h-5 group-hover:fill-white transition-all" />
-              </motion.span>
 
-              <span className="tracking-wide">Bookmark</span>
+            <motion.button
+              disabled={bookmarkStatus?.exists || bookmarkMutation.isLoading}
+              onClick={() => bookmarkMutation.mutate()}
+              className={`px-5 py-2.5 flex items-center gap-2 rounded-xl text-white font-semibold
+                  ${bookmarkStatus?.exists
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-linear-to-r from-sky-500 via-blue-500 to-indigo-600"}`}
+              whileHover={{ scale: 1.08, y: -2 }}  // same hover effect
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <Bookmark size={18} />
+              {bookmarkStatus?.exists
+                ? "Bookmarked"
+                : bookmarkMutation.isLoading
+                  ? "Saving..."
+                  : "Bookmark"}
             </motion.button>
           </div>
         </motion.div>

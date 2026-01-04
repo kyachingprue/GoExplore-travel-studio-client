@@ -6,10 +6,13 @@ import { Loader2 } from "lucide-react";
 import GoogleLoginButton from "./GoogleLoginButton";
 import toast from "react-hot-toast";
 import useAuth from "../hooks/useAuth";
+import { useMutation } from "@tanstack/react-query";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 
 const Register = () => {
   const { registerUser, profileUpdate, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
+  const axiosPublic = useAxiosPublic();
   const [btnLoading, setBtnLoading] = useState(false);
 
   const {
@@ -17,6 +20,14 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  // 🔥 React Query Mutation
+  const { mutateAsync: saveUser } = useMutation({
+    mutationFn: async (userInfo) => {
+      const res = await axiosPublic.post("/users", userInfo);
+      return res.data;
+    },
+  });
 
   const onSubmit = async (data) => {
     setBtnLoading(true);
@@ -33,6 +44,20 @@ const Register = () => {
         photoURL:
           "https://i.ibb.co.com/wFc27jwr/360-F-724597608-pmo5-Bs-Vum-Fc-Fy-HJKl-ASG2-Y2-Kpkkfi-YUU.jpg",
       });
+
+      const userInfo = {
+        name: `${data.firstName} ${data.lastName}`,
+        email: data.email,
+        coverImage:"https://i.ibb.co.com/SXfYf7VV/Navy-Blue-Geometric-Technology-Linked-In-Banner.png",
+        profileImage:
+          "https://i.ibb.co.com/wFc27jwr/360-F-724597608-pmo5-Bs-Vum-Fc-Fy-HJKl-ASG2-Y2-Kpkkfi-YUU.jpg",
+        role: "user",
+        emailVerified: false, 
+        createdAt: new Date(),
+      };
+
+      await saveUser(userInfo);
+
       toast.success("Registration successful! Check your email to verify.");
       navigate("/verify-email", { state: { email: data.email } });
     } catch (error) {
