@@ -6,14 +6,13 @@ import { Loader2 } from "lucide-react";
 import useAuth from "../hooks/useAuth";
 import GoogleLoginButton from "./GoogleLoginButton";
 import toast from "react-hot-toast";
-import { useMutation } from "@tanstack/react-query";
-import useAxiosPublic from "../hooks/useAxiosPublic";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 const Login = () => {
   const { loginUser, loginWithGoogle, } = useAuth();
   const [btnLoading, setBtnLoading] = useState(false);
   const navigate = useNavigate();
-  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
 
   const {
     register,
@@ -23,29 +22,38 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     setBtnLoading(true);
+
     try {
+      // 1️⃣ Login with Firebase
       const loggedUser = await loginUser(data.email, data.password);
 
+      // 2️⃣ Check Firebase email verification
       if (!loggedUser.emailVerified) {
         toast.error("Please verify your email first!");
-
-        await loggedUser.sendEmailVerification?.();
-        toast.success("Verification email sent! Check your inbox.");
-
-        return; 
+        navigate("/verify-email"); 
+        return;
       }
 
-      const userDB = await axiosPublic.get(`/users/email/${loggedUser.email}`);
-
-      if (!userDB.data.emailVerified) {
-        // Update MongoDB only if not verified
-        await axiosPublic.patch("/users/verify", { email: loggedUser.email });
+      // 3️⃣ Get MongoDB user
+      const { data: userDB } = await axiosSecure.get(
+        `/users/email/${loggedUser.email}`
+      );
+     
+      if (!userDB?.emailVerified) {
+        await axiosSecure.put(
+          '/users/verify',
+          { email: loggedUser?.email },  // body
+          { withCredentials: true }     // config
+        );
+        console.log("MongoDB user updated successfully!");
       }
 
+      // 5️⃣ Login successful
       toast.success("Login successful!");
-      navigate("/"); // Go to dashboard/home
+      navigate("/"); 
+
     } catch (error) {
-      console.error(error);
+      console.error("error message",error);
       toast.error(
         error?.response?.data?.message || error.message || "Login failed!"
       );
