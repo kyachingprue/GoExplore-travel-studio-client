@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import PackageCard from "./PackageCard";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
+import LoadingSpinner from "../LoadingSpinner";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -68,7 +69,7 @@ const PackageData = () => {
   };
 
   if (isLoading) {
-    return <div className="text-center py-10">Loading packages...</div>;
+    return <LoadingSpinner/>
   }
 
   if (isError) {

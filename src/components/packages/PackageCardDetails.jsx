@@ -34,6 +34,17 @@ const PackageCardDetails = () => {
     },
   });
 
+  const { data: userDB } = useQuery({
+    queryKey: ["mongoUser", user?.email],
+    queryFn: async () => {
+      if (!user?.email) return null;
+      const res = await axiosSecure.get(`/users/email/${user?.email}`);
+      return res.data;
+    },
+    enabled: !!user?.email,
+    staleTime: 5 * 60 * 1000,
+  });
+
   //Add To Card API
   const addToCartMutation = useMutation({
     mutationFn: async () => {
@@ -43,6 +54,7 @@ const PackageCardDetails = () => {
         title: packageData.title,
         price: packageData.price,
         image: packageData.image,
+        createdAt: new Date(),
       });
     },
     onSuccess: () => {
@@ -74,6 +86,7 @@ const PackageCardDetails = () => {
         packageId: _id,
         title: packageData.title,
         image: packageData.image,
+        price: packageData.price
       });
     },
     onSuccess: () => {
@@ -194,29 +207,31 @@ const PackageCardDetails = () => {
             </motion.button>
 
             <motion.button
-              disabled={cartStatus?.exists || addToCartMutation.isLoading}
+              disabled={cartStatus?.exists || addToCartMutation.isLoading || userDB?.role === "admin"}
               onClick={() => addToCartMutation.mutate()}
               className={`px-6 py-3 flex items-center gap-2 rounded-xl text-white font-semibold
-                  ${cartStatus?.exists
+                  ${cartStatus?.exists || userDB?.role === "admin"
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-linear-to-r from-sky-500 via-blue-500 to-cyan-500"}`}
-              whileHover={{ scale: 1.08, y: -2 }}  // increase size slightly & lift up
-              whileTap={{ scale: 0.95 }}           // press down effect
+              whileHover={{ scale: 1.08, y: -2 }} 
+              whileTap={{ scale: 0.95 }}        
               transition={{ type: "spring", stiffness: 300 }}
             >
               <ShoppingCart size={18} />
-              {cartStatus?.exists
-                ? "Added"
-                : addToCartMutation.isLoading
-                  ? "Adding..."
-                  : "Add To Cart"}
+              {userDB?.role === "admin"
+                ? "Disabled"
+                : cartStatus?.exists
+                  ? "Added"
+                  : addToCartMutation.isLoading
+                    ? "Adding..."
+                    : "Add To Cart"}
             </motion.button>
 
             <motion.button
-              disabled={bookmarkStatus?.exists || bookmarkMutation.isLoading}
+              disabled={bookmarkStatus?.exists || bookmarkMutation.isLoading || userDB?.role === "admin"}
               onClick={() => bookmarkMutation.mutate()}
               className={`px-5 py-2.5 flex items-center gap-2 rounded-xl text-white font-semibold
-                  ${bookmarkStatus?.exists
+                  ${ bookmarkStatus?.exists || userDB?.role === "admin"
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-linear-to-r from-sky-500 via-blue-500 to-indigo-600"}`}
               whileHover={{ scale: 1.08, y: -2 }}  // same hover effect
@@ -224,11 +239,13 @@ const PackageCardDetails = () => {
               transition={{ type: "spring", stiffness: 300 }}
             >
               <Bookmark size={18} />
-              {bookmarkStatus?.exists
-                ? "Bookmarked"
-                : bookmarkMutation.isLoading
-                  ? "Saving..."
-                  : "Bookmark"}
+              {userDB?.role === "admin"
+                ? "Disabled"
+                : bookmarkStatus?.exists
+                  ? "Bookmarked"
+                  : bookmarkMutation.isLoading
+                    ? "Saving..."
+                    : "Bookmark"}
             </motion.button>
           </div>
         </motion.div>

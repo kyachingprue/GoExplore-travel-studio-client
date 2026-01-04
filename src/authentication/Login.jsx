@@ -10,7 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import useAxiosPublic from "../hooks/useAxiosPublic";
 
 const Login = () => {
-  const { loginUser,user, loginWithGoogle, } = useAuth();
+  const { loginUser, loginWithGoogle, } = useAuth();
   const [btnLoading, setBtnLoading] = useState(false);
   const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
@@ -21,35 +21,37 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const { mutateAsync: updateVerify } = useMutation({
-    mutationFn: async (email) => {
-      const res = await axiosPublic.patch("/users/verify", { email });
-      return res.data;
-    },
-  });
-
   const onSubmit = async (data) => {
     setBtnLoading(true);
     try {
-      // 1️⃣ Login user from Firebase
       const loggedUser = await loginUser(data.email, data.password);
 
-      // 2️⃣ Check Firebase email verification
       if (!loggedUser.emailVerified) {
         toast.error("Please verify your email first!");
-        setBtnLoading(false);
-        return;
+
+        await loggedUser.sendEmailVerification?.();
+        toast.success("Verification email sent! Check your inbox.");
+
+        return; 
       }
 
-      // 3️⃣ After Firebase verified, update MongoDB
-      await axiosPublic.patch("/users/verify", { email: loggedUser.email });
+      const userDB = await axiosPublic.get(`/users/email/${loggedUser.email}`);
+
+      if (!userDB.data.emailVerified) {
+        // Update MongoDB only if not verified
+        await axiosPublic.patch("/users/verify", { email: loggedUser.email });
+      }
 
       toast.success("Login successful!");
-      navigate("/");
+      navigate("/"); // Go to dashboard/home
     } catch (error) {
-      toast.error(error.message || "Login failed!");
+      console.error(error);
+      toast.error(
+        error?.response?.data?.message || error.message || "Login failed!"
+      );
+    } finally {
+      setBtnLoading(false);
     }
-    setBtnLoading(false);
   };
 
   const handleForgotPassword = async () => {

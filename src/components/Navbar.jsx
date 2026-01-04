@@ -124,13 +124,18 @@ const Navbar = () => {
 
           {/* Travel Card */}
           {user && <button
-            onClick={() => navigate("/dashboard")}
+            onClick={() => {
+            if (userDB?.role === "admin") {
+              navigate("/dashboard/admin/analytics");
+            } else {
+            navigate("/dashboard/overview");
+             }}}
             className="relative bg-white/20 hover:bg-white/30 p-2 rounded-xl"
           >
             <LayoutDashboard />
             {cartCount?.count > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white
-      text-xs px-1.5 rounded-full">
+               text-xs px-1.5 rounded-full">
                 {cartCount.count}
               </span>
             )}
