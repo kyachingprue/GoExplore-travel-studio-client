@@ -78,6 +78,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     await logoutUser();
+    navigate('/')
     toast.success("User Logout🏞️")
     setProfileOpen(false);
     setMenuOpen(false);

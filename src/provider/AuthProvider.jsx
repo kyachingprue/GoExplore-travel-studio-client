@@ -13,8 +13,14 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebase/firebase.config";
 import AuthContext from "../context/AuthContext";
+import axios from "axios";
 
 const googleProvider = new GoogleAuthProvider();
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000",
+  withCredentials: true, // 🔴 cookie enable
+});
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -51,6 +57,7 @@ const AuthProvider = ({ children }) => {
   // Logout user
   const logoutUser = async () => {
     setLoading(true);
+    await api.post("/logout");
     await signOut(auth);
     setUser(null);
     setLoading(false);
@@ -79,11 +86,16 @@ const AuthProvider = ({ children }) => {
     return updateProfile(auth.currentUser, profile )
   }
 
-  // Listen to auth state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-      console.log("User data-->", currentUser);
+      console.log("user data-->", currentUser);
+
+      if (currentUser?.email) {
+        await api.post("/jwt", { email: currentUser.email });
+      } else {
+        await api.post("/logout");
+      }
       setLoading(false);
     });
 

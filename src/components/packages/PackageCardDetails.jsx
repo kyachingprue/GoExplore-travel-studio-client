@@ -109,6 +109,15 @@ const PackageCardDetails = () => {
     },
   });
 
+  const handleAuthRequired = () => {
+    if (!user) {
+      toast.error("Please login first 🔐");
+      navigate("/login", { replace: true });
+      return false;
+    }
+    return true;
+  };
+
   if (isLoading) {
     return <LoadingSpinner/>
   }
@@ -208,7 +217,10 @@ const PackageCardDetails = () => {
 
             <motion.button
               disabled={cartStatus?.exists || addToCartMutation.isLoading || userDB?.role === "admin"}
-              onClick={() => addToCartMutation.mutate()}
+              onClick={() => {
+                if (!handleAuthRequired()) return;
+                addToCartMutation.mutate();
+              }}
               className={`px-6 py-3 flex items-center gap-2 rounded-xl text-white font-semibold
                   ${cartStatus?.exists || userDB?.role === "admin"
                   ? "bg-gray-400 cursor-not-allowed"
@@ -229,7 +241,10 @@ const PackageCardDetails = () => {
 
             <motion.button
               disabled={bookmarkStatus?.exists || bookmarkMutation.isLoading || userDB?.role === "admin"}
-              onClick={() => bookmarkMutation.mutate()}
+              onClick={() => {
+                if (!handleAuthRequired()) return;
+                bookmarkMutation.mutate();
+              }}
               className={`px-5 py-2.5 flex items-center gap-2 rounded-xl text-white font-semibold
                   ${ bookmarkStatus?.exists || userDB?.role === "admin"
                   ? "bg-gray-400 cursor-not-allowed"

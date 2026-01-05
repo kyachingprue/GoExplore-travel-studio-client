@@ -24,6 +24,7 @@ import ManageUsers from "../dashboard/admin/ManageUsers";
 import AdminPayments from "../dashboard/admin/AdminPayments";
 import AdminReviews from "../dashboard/admin/AdminReviews";
 import AdminBlogs from "../dashboard/admin/AdminBlogs";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -59,28 +60,28 @@ const router = createBrowserRouter([
   },
   {
     path: '/dashboard',
-    element: <DashboardLayout />,
+    element: <PrivateRoute><DashboardLayout /></PrivateRoute>,
     children: [
       //User Dashboard
       {
         path: 'overview',
-        element: <Overview/>
+        element: <PrivateRoute><Overview /></PrivateRoute>
       },
       {
         path: 'bookings',
-        element: <MyBookings/>
+        element: <PrivateRoute><MyBookings /></PrivateRoute>
       },
       {
         path: 'payments',
-        element: <Payments/>
+        element: <PrivateRoute><Payments /></PrivateRoute>
       },
       {
         path: 'reviews',
-        element: <Reviews/>
+        element: <PrivateRoute><Reviews /></PrivateRoute>
       },
       {
         path: 'wishlist',
-        element: <WishList/>
+        element: <PrivateRoute><WishList /></PrivateRoute>
       },
       //Admin Dashboard
       {

@@ -65,7 +65,7 @@ const MyBookings = () => {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-xl sm:text-2xl lg:text-3xl font-semibold
+        className="text-xl sm:text-2xl lg:text-3xl font-bold
                    bg-linear-to-r from-sky-600 via-blue-500 to-indigo-600
                    bg-clip-text text-transparent mb-6"
       >
@@ -73,7 +73,7 @@ const MyBookings = () => {
       </motion.h1>
 
       {myPackages.length === 0 ? (
-        <p className="text-gray-500">No bookings found.</p>
+        <h2 className="text-gray-700 flex text-xl md:text-2xl md:py-32 justify-center items-center w-full text-center mx-auto">No bookings found.</h2>
       ) : (
         <div className="overflow-x-auto">
           <table className="min-w-full border border-gray-200 rounded-lg">
