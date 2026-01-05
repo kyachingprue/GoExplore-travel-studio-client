@@ -160,7 +160,7 @@ const AddNewPackage = () => {
             <input
               {...register("type", { required: true })}
               className="input input-bordered border border-gray-300 rounded-md py-1.5 px-4 w-full"
-              placeholder="Beach / Adventure"
+              placeholder="Beach / Adventure / City Tour"
             />
             {errors.type && (
               <p className="text-red-500 text-sm">Type is required</p>

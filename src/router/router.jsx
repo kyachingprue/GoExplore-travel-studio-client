@@ -27,6 +27,7 @@ import AdminBlogs from "../dashboard/admin/AdminBlogs";
 import PrivateRoute from "./PrivateRoute";
 import PackageUpdate from "../dashboard/admin/PackageUpdate";
 import AddNewPackage from "../dashboard/admin/AddNewPackage";
+import AdminRoute from "./AdminRoute";
 
 const router = createBrowserRouter([
   {
@@ -88,39 +89,39 @@ const router = createBrowserRouter([
       //Admin Dashboard
       {
         path: 'admin/analytics',
-        element: <Analytics/>
+        element: <AdminRoute><Analytics /></AdminRoute>
       },
       {
         path: 'admin/packages',
-        element: <ManagePackages/>
+        element: <AdminRoute><ManagePackages /></AdminRoute>
       },
       {
         path: 'admin/package-update/:id',
-        element: <PackageUpdate/>
+        element: <AdminRoute><PackageUpdate /></AdminRoute>
       },
       {
         path: "admin/add-new-package",
-        element: <AddNewPackage />,
+        element: <AdminRoute><AddNewPackage /></AdminRoute>,
       },
       {
         path: 'admin/manage-bookings',
-        element: <ManageBookings/>
+        element: <AdminRoute><ManageBookings /></AdminRoute>
       },
       {
         path: 'admin/users',
-        element: <ManageUsers/>
+        element: <AdminRoute><ManageUsers /></AdminRoute>
       },
       {
         path: 'admin/payments',
-        element: <AdminPayments/>
+        element: <AdminRoute><AdminPayments /></AdminRoute>
       },
       {
         path: 'admin/reviews',
-        element: <AdminReviews/>
+        element: <AdminRoute><AdminReviews /></AdminRoute>
       },
       {
         path: 'admin/blogs',
-        element: <AdminBlogs/>
+        element: <AdminRoute><AdminBlogs /></AdminRoute>
       }
     ]
   },

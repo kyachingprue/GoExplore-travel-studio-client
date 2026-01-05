@@ -90,10 +90,14 @@ const ReviewCard = () => {
 
   return (
     <div className="relative w-full py-16 overflow-hidden bg-linear-to-b from-gray-50 to-white">
-      <h2 className="text-3xl font-bold text-center mb-10">
-        Traveler Experiences
-      </h2>
+      <div className="w-8/12 mx-auto items-center pb-10">
+        <h2 className="text-3xl font-bold text-center pb-5">
+          Experience Reviews
+        </h2>
+        <p className="text-gray-600 text-center pb-4">I have worked on multiple web development projects gaining hands-on experience in front-end and back-end technologies
+          I have learned to solve complex problems, implement dynamic features, and optimize performance for real-world applications</p>
 
+      </div>
       <button
         onClick={handlePrev}
         className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white shadow-md p-3 rounded-full"
