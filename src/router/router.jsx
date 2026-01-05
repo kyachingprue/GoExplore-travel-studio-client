@@ -25,6 +25,8 @@ import AdminPayments from "../dashboard/admin/AdminPayments";
 import AdminReviews from "../dashboard/admin/AdminReviews";
 import AdminBlogs from "../dashboard/admin/AdminBlogs";
 import PrivateRoute from "./PrivateRoute";
+import PackageUpdate from "../dashboard/admin/PackageUpdate";
+import AddNewPackage from "../dashboard/admin/AddNewPackage";
 
 const router = createBrowserRouter([
   {
@@ -91,6 +93,14 @@ const router = createBrowserRouter([
       {
         path: 'admin/packages',
         element: <ManagePackages/>
+      },
+      {
+        path: 'admin/package-update/:id',
+        element: <PackageUpdate/>
+      },
+      {
+        path: "admin/add-new-package",
+        element: <AddNewPackage />,
       },
       {
         path: 'admin/manage-bookings',
