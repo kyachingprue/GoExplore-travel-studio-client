@@ -81,7 +81,7 @@ const ManagePackages = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto bg-white rounded-2xl shadow-md">
+      <div className="overflow-x-hidden bg-white rounded-2xl shadow-md">
         <table className="min-w-full text-sm">
           <thead>
             <tr className="bg-sky-200 text-gray-700">

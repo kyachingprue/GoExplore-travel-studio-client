@@ -17,6 +17,7 @@ import LoadingSpinner from "../LoadingSpinner";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
+import PackageReviews from "./PackageReviews";
 
 const PackageCardDetails = () => {
   const { _id } = useParams();
@@ -136,7 +137,7 @@ const PackageCardDetails = () => {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="max-w-6xl mx-auto bg-white/70 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden grid md:grid-cols-2 gap-6"
+        className="w-full mx-auto bg-white/70 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden grid md:grid-cols-2 gap-6"
       >
         {/* Left Image */}
         <motion.div
@@ -265,6 +266,11 @@ const PackageCardDetails = () => {
           </div>
         </motion.div>
       </motion.div>
+      <PackageReviews
+        packageId={packageData._id}
+        packageTitle={packageData.title}
+        packageImage={packageData.image}
+      />
     </div>
   );
 };

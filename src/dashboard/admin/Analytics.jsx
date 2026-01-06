@@ -114,12 +114,12 @@ const Analytics = () => {
 
       <div className="flex flex-col mx-auto gap-6 mb-10">
         {/* Popular Packages / Bookmarks */}
-        <div className=" bg-white/80 backdrop-blur-md rounded-2xl shadow-md p-6">
+        <div className=" bg-white/80  backdrop-blur-md rounded-2xl shadow-md p-6">
           <h2 className="text-xl font-semibold mb-4">
             Popular Packages (Bookmarks)
           </h2>
 
-          <div className="overflow-x-auto rounded-2xl border border-sky-100">
+          <div className="overflow-x-auto w-full h-100 overflow-y-scroll rounded-2xl border border-sky-100">
             <table className="min-w-full text-sm">
               <thead>
                 <tr className="bg-linear-to-r from-sky-100 to-blue-100 text-gray-700">
@@ -178,7 +178,7 @@ const Analytics = () => {
             Users Package Purchase
           </h2>
 
-          <div className="overflow-x-auto rounded-2xl border border-sky-100">
+          <div className="overflow-x-auto w-full h-100 overflow-y-scroll rounded-2xl border border-sky-100">
             <table className="min-w-full text-sm">
               <thead>
                 <tr className="bg-linear-to-r from-sky-100 to-blue-100 text-gray-700">

@@ -28,6 +28,9 @@ import PrivateRoute from "./PrivateRoute";
 import PackageUpdate from "../dashboard/admin/PackageUpdate";
 import AddNewPackage from "../dashboard/admin/AddNewPackage";
 import AdminRoute from "./AdminRoute";
+import AddExperienceCard from "../dashboard/admin/AddExperienceCard";
+import ExperienceCardEdit from "../dashboard/admin/ExperienceCardEdit";
+import ExperienceCardDetails from "../components/experiences/ExperienceCardDetails";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: 'experience',
         element: <Experience/>
+      },
+      {
+        path: "experience/:id",
+        element:< ExperienceCardDetails />
       },
       {
         path: 'profile',
@@ -122,6 +129,14 @@ const router = createBrowserRouter([
       {
         path: 'admin/blogs',
         element: <AdminRoute><AdminBlogs /></AdminRoute>
+      },
+      {
+        path: "admin/add-experience-card",
+        element: <AddExperienceCard />
+      },
+      {
+        path:"admin/experience-card-edit/:id",
+        element: <ExperienceCardEdit />
       }
     ]
   },
