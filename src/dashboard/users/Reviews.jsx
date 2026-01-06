@@ -123,40 +123,40 @@ const Reviews = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {reviews.map((review) => (
         <motion.div
           key={review._id}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="border rounded-xl p-5 bg-white shadow hover:shadow-lg transition-shadow"
+          className="border border-gray-300 h-80 overflow-auto rounded-xl p-5 bg-sky-100 shadow hover:shadow-2xl hover:scale-105 transition-transform duration-300"
         >
           {/* User Info */}
-          <div className="flex justify-between items-center mb-3">
-            <div>
-              {/* <img src={review?.packageImage} alt="" /> */}
-              <div className="font-semibold text-gray-800">{review.packageTitle}</div>
-              <div className="text-sm text-gray-500">
-                {new Date(review.createdAt).toLocaleDateString()}
-              </div>
+          <div className="flex justify-between items-center gap-3 mb-3">
+            <div className="flex flex-col items-center md:items-start gap-2">
+              <motion.img
+                src={review?.packageImage}
+                alt="Review"
+                className="w-28 h-24 rounded-lg object-cover cursor-pointer"
+                whileHover={{ scale: 1.1, rotate: 2 }}
+                transition={{ type: "spring", stiffness: 200 }}
+              />
             </div>
-
-            {/* Edit / Delete Buttons */}
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2">
               <motion.button
-                whileHover={{ scale: 1.1 }}
-                className="p-2 rounded-full bg-yellow-100 text-yellow-600"
+                whileHover={{ scale: 1.15, rotate: 5 }}
+                className="flex items-center gap-1 px-3 py-2 rounded-lg bg-yellow-100 text-yellow-700 font-semibold shadow hover:shadow-md transition-all duration-200"
                 onClick={() => handleEdit(review)}
               >
-                <Edit size={16} />
+                <Edit size={16} /> Edit
               </motion.button>
               <motion.button
-                whileHover={{ scale: 1.1 }}
-                className="p-2 rounded-full bg-red-100 text-red-600"
+                whileHover={{ scale: 1.15, rotate: -5 }}
+                className="flex items-center gap-1 px-3 py-2 rounded-lg bg-red-100 text-red-600 font-semibold shadow hover:shadow-md transition-all duration-200"
                 onClick={() => handleDelete(review._id)}
               >
-                <Trash2 size={16} />
+                <Trash2 size={16} /> Delete
               </motion.button>
             </div>
           </div>
@@ -177,8 +177,7 @@ const Reviews = () => {
                 {[1, 2, 3, 4, 5].map((star) => (
                   <span
                     key={star}
-                    className={`cursor-pointer text-2xl ${star <= editRating ? "text-yellow-400" : "text-gray-300"
-                      }`}
+                    className={`cursor-pointer text-2xl ${star <= editRating ? "text-yellow-400" : "text-gray-300"}`}
                     onClick={() => setEditRating(star)}
                   >
                     ★
@@ -188,22 +187,20 @@ const Reviews = () => {
 
               <motion.button
                 whileHover={{ scale: 1.05 }}
-                className="bg-primary text-white bg-sky-700 px-4 py-2 rounded-xl font-semibold"
+                className="bg-sky-700 text-white px-4 py-2 rounded-xl font-semibold"
                 onClick={() => handleEditSubmit(review._id)}
               >
                 Save
               </motion.button>
             </div>
           ) : (
-            <div>
+              <div>
+                <div className="font-semibold text-gray-800 py-2 text-left">{review.packageTitle}</div>
+                <div className="text-sm pb-2 text-gray-600">Date:{new Date(review.createdAt).toLocaleDateString()}</div>
               <div className="text-gray-700 mb-2">{review.comment}</div>
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((star) => (
-                  <span
-                    key={star}
-                    className={`text-xl ${star <= review.rating ? "text-yellow-400" : "text-gray-500"
-                      }`}
-                  >
+                  <span key={star} className={`text-xl ${star <= review.rating ? "text-yellow-400" : "text-gray-500"}`}>
                     ★
                   </span>
                 ))}
@@ -211,6 +208,7 @@ const Reviews = () => {
             </div>
           )}
         </motion.div>
+
       ))}
     </div>
   );

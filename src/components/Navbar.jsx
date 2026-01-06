@@ -182,7 +182,13 @@ const Navbar = () => {
         <div className="flex md:hidden items-center gap-3">
           {/* Travel Card */}
           <button
-            onClick={() => navigate("/dashboard")}
+            onClick={() => {
+              if (userDB?.role === "admin") {
+                navigate("/dashboard/admin/analytics");
+              } else {
+                navigate("/dashboard/overview");
+              }
+            }}
             className="bg-white/20 p-2 rounded-lg"
           >
             <LayoutDashboard size={18} />
@@ -225,7 +231,7 @@ const Navbar = () => {
         <div className="md:hidden bg-white text-black px-6 py-4 space-y-3 shadow-lg">
           <NavLink to="/" className="px-2" onClick={() => setMenuOpen(false)}>Home</NavLink>
           <NavLink to="/about" className="px-2" onClick={() => setMenuOpen(false)}>About</NavLink>
-          <NavLink to="/package" className="px-2" onClick={() => setMenuOpen(false)}>Package</NavLink>
+          <NavLink to="/packages" className="px-2" onClick={() => setMenuOpen(false)}>Package</NavLink>
           <NavLink to="/experience" className="px-2" onClick={() => setMenuOpen(false)}>Experience</NavLink>
 
           {!user && (

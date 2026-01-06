@@ -72,6 +72,7 @@ const PackageReviews = ({ packageId, packageTitle, packageImage }) => {
       packageImage,
       userName: user.displayName,
       userEmail: user.email,
+      userImage: userDB.profileImage,
       rating,
       comment,
       createdAt: new Date(),
@@ -79,7 +80,7 @@ const PackageReviews = ({ packageId, packageTitle, packageImage }) => {
   };
 
   return (
-    <section className="mt-16 p-6 rounded-3xl bg-sky-200">
+    <section className="mt-16 p-6 rounded-xl bg-sky-200">
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Left side */}
         <div className="lg:col-span-2 space-y-6">
@@ -101,7 +102,7 @@ const PackageReviews = ({ packageId, packageTitle, packageImage }) => {
               </div>
             </div>
           ) : reviews.length === 0 ? (
-            <div className="text-center py-6 border border-gray-300 rounded-xl bg-white">
+            <div className="text-center flex flex-col justify-center items-center md:h-80 py-5 border border-gray-300 rounded-xl bg-white">
               <p className="text-gray-600 mb-2">
                 No reviews yet. Be the first one 🌟
               </p>
@@ -112,16 +113,16 @@ const PackageReviews = ({ packageId, packageTitle, packageImage }) => {
               </div>
             </div>
           ) : (
-            <div className="space-y-4 h-80 px-4 overflow-y-scroll">
+            <div className="space-y-4  h-100 md:h-80 md:px-4 overflow-auto">
               {reviews.map((review) => (
                 <div
                   key={review._id}
-                  className="bg-white p-4 rounded-xl shadow-sm hover:shadow-xl"
+                  className="bg-white p-2 md:p-4 rounded-xl shadow-sm hover:shadow-xl"
                 >
                   <div className="flex items-center gap-3">
                     {/* User Image */}
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                      <img src={userDB?.profileImage} className="rounded-full object-cover" alt="Reviews comments" />
+                      <img src={review?.userImage} className="rounded-full object-cover" alt="Reviews comments" />
                     </div>
 
                     <div className="flex-1">
@@ -211,8 +212,6 @@ const PackageReviews = ({ packageId, packageTitle, packageImage }) => {
             </button>
           </div>
         </div>
-
-        {/* ---> RIGHT SIDE <--- */}
         <div className="bg-white rounded-2xl md:h-96 md:mt-16 shadow-md overflow-hidden">
           <img
             src={packageImage}
