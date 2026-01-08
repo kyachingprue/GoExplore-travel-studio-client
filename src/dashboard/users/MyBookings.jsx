@@ -5,11 +5,13 @@ import { Trash2, CreditCard } from "lucide-react";
 import { toast } from "react-hot-toast";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const MyBookings = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
+  const navigate = useNavigate()
 
   const {
     data: myPackages = [],
@@ -115,6 +117,7 @@ const MyBookings = () => {
                       }}
                       whileTap={{ scale: 0.95 }}
                       transition={{ type: "spring", stiffness: 300, damping: 18 }}
+                      onClick={() => navigate(`/dashboard/payments/${pkg?._id}`)}
                       className="flex items-center mt-3 gap-1 px-3 py-1 rounded
                       bg-blue-500 text-white hover:bg-blue-600"
                     >

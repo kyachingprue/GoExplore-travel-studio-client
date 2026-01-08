@@ -101,7 +101,7 @@ const Profile = () => {
     );
 
   return (
-    <div className="min-h-screen bg-linear-to-r from-orange-200 via-pink-200 to-blue-200 flex justify-center mt-16 p-4">
+    <div className="min-h-screen bg-sky-200 flex justify-center mt-16 pb-24 pt-4">
       <motion.div
         className="w-full max-w-6xl bg-white/30 backdrop-blur-md rounded-3xl overflow-hidden shadow-xl"
         initial={{ opacity: 0, y: 50 }}
