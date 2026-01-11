@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
+import toast from "react-hot-toast";
 
 const PaymentForm = () => {
   const stripe = useStripe();
@@ -14,6 +15,7 @@ const PaymentForm = () => {
   const { user } = useAuth();
   const { id } = useParams();
   const [payLoading, setPayLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(" ")
 
 
   const { data: packageData, isLoading } = useQuery({
@@ -26,32 +28,41 @@ const PaymentForm = () => {
     },
   });
 
+  const amount = packageData?.price;
+  const amountInCents = amount * 100;
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!stripe || !elements) return;
 
     setPayLoading(true);
+    setErrorMessage("");
 
-    const card = elements.getElement(CardElement);
-    if (!card) {
-      setPayLoading(false);
-      return;
-    }
+    const res = await axiosSecure.post('/create-payment-intent', {
+      amountInCents,
+    });
 
-    const { error, paymentMethod } =
-      await stripe.createPaymentMethod({
-        type: "card",
-        card,
-      });
+    const clientSecret = res.data.clientSecret;
 
-    if (error) {
-      console.error(error);
-      setPayLoading(false);
-      return;
-    }
+    const result = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: elements.getElement(CardElement),
+        billing_details: {
+          name: user?.displayName,
+          email: user?.email,
+        },
+      },
+    });
 
-    console.log("Payment Success:", paymentMethod);
     setPayLoading(false);
+
+    if (result.error) {
+      setErrorMessage(result.error.message);
+    } else if (result.paymentIntent.status === "succeeded") {
+      toast.success("Payment succeeded 💳")
+      console.log("Payment succeeded 🎉");
+    }
   };
 
   if (isLoading) {
@@ -135,6 +146,7 @@ const PaymentForm = () => {
               </>
             )}
           </motion.button>
+          <p className="text-center text-red-500">{errorMessage?.message}</p>
         </form>
       </motion.div>
     </div>
