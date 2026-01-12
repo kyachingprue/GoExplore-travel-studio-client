@@ -84,6 +84,7 @@ const MyBookings = () => {
                 <th className="px-4 py-2 text-left">Image</th>
                 <th className="px-4 py-2 text-left">Title</th>
                 <th className="px-4 py-2 text-left">Package ID</th>
+                <th className="px-4 py-2 text-left">Status</th>
                 <th className="px-4 py-2 text-left">Price</th>
                 <th className="px-4 py-2 text-left">Actions</th>
               </tr>
@@ -107,22 +108,40 @@ const MyBookings = () => {
                   </td>
                   <td className="px-4 py-2 font-medium">{pkg.title}</td>
                   <td className="px-4 py-2 text-gray-500">{pkg.packageId}</td>
+                  <td className="px-4 py-2 text-gray-500">
+                    <span
+                      className={`px-3 py-1 text-sm font-semibold rounded-full text-white
+                        ${pkg.payment_status === "paid"
+                          ? "bg-green-600"
+                          : "bg-yellow-500"
+                        }`}
+                    >
+                      {pkg.payment_status === "paid" ? "Paid" : "Pending"}
+                    </span>
+                  </td>
                   <td className="px-4 py-2 font-semibold">${pkg.price}</td>
                   <td className="px-4 py-2 flex gap-3">
-                    {/* Pay Button (UI only) */}
                     <motion.button
-                      whileHover={{
-                        scale: 1.05,
-                        boxShadow: "0px 8px 20px rgba(37, 99, 235, 0.4)",
-                      }}
-                      whileTap={{ scale: 0.95 }}
+                      disabled={pkg.payment_status === "paid"}
+                      onClick={() => navigate(`/dashboard/payments/${pkg._id}`)}
+                      whileHover={
+                        pkg.payment_status !== "paid"
+                          ? {
+                            scale: 1.05,
+                            boxShadow: "0px 8px 20px rgba(37, 99, 235, 0.4)",
+                          }
+                          : {}
+                      }
+                      whileTap={pkg.payment_status !== "paid" ? { scale: 0.95 } : {}}
                       transition={{ type: "spring", stiffness: 300, damping: 18 }}
-                      onClick={() => navigate(`/dashboard/payments/${pkg?._id}`)}
-                      className="flex items-center mt-3 gap-1 px-3 py-1 rounded
-                      bg-blue-500 text-white hover:bg-blue-600"
+                      className={`flex items-center mt-3 gap-1 px-3 py-1 rounded text-white
+                       ${pkg.payment_status === "paid"
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-blue-500 hover:bg-blue-600"
+                        }`}
                     >
                       <CreditCard size={16} />
-                      Pay
+                      {pkg.payment_status === "paid" ? "Paid" : "Pay"}
                     </motion.button>
 
                     {/* Delete Button */}

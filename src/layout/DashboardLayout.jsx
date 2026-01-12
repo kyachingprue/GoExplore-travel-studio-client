@@ -46,7 +46,7 @@ const DashboardLayout = () => {
   const userRoutes = [
     { name: "Overview", to: "/dashboard/overview", icon: LayoutDashboard },
     { name: "My Bookings", to: "/dashboard/bookings", icon: BookOpen },
-    { name: "Payments", to: "/dashboard/payments", icon: CreditCard },
+    { name: "Payments", to: "/dashboard/payment-history", icon: CreditCard },
     { name: "Reviews & Ratings", to: "/dashboard/reviews", icon: Star },
     { name: "Wishlist / Saved", to: "/dashboard/wishlist", icon: Heart },
     { name: "My Profile", to: "/profile", icon: User },

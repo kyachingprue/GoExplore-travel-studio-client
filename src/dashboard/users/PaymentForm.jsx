@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { DollarSign, CreditCard, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
@@ -16,6 +16,7 @@ const PaymentForm = () => {
   const { id } = useParams();
   const [payLoading, setPayLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(" ")
+  const navigate = useNavigate();
 
 
   const { data: packageData, isLoading } = useQuery({
@@ -61,7 +62,23 @@ const PaymentForm = () => {
       setErrorMessage(result.error.message);
     } else if (result.paymentIntent.status === "succeeded") {
       toast.success("Payment succeeded 💳")
-      console.log("Payment succeeded 🎉");
+      console.log("Payment succeeded ", result.paymentIntent);
+      const paymentInfo = {
+        packageId: packageData._id,
+        email: user?.email,
+        image: packageData.image,
+        status: "pending",
+        packageName: packageData.title,
+        amount: packageData.price,
+        paymentMethod: result.paymentIntent.payment_method_types[0],
+        transactionId: result.paymentIntent.id,
+      }
+
+      const paymentRes = await axiosSecure.post('/payments', paymentInfo);
+      if (paymentRes.data.insertedId) {
+        console.log("Payment successfully add");
+        navigate('/dashboard/payment-history')
+      }
     }
   };
 

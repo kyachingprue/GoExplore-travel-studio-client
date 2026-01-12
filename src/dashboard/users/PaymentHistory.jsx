@@ -2,8 +2,10 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useAuth from "../../hooks/useAuth";
 
-const AdminPayment = () => {
+const PaymentHistory = () => {
+  const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
   const {
@@ -11,9 +13,12 @@ const AdminPayment = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["adminPayments"],
+    queryKey: ["paymentHistory", user?.email],
+    enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get("/payments");
+      const res = await axiosSecure.get(
+        `/payments?email=${user.email}`
+      );
       return res.data;
     },
   });
@@ -22,7 +27,7 @@ const AdminPayment = () => {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
         <motion.div
-          className="w-14 h-14 border-4 border-purple-500 border-t-transparent rounded-full"
+          className="w-14 h-14 border-4 border-indigo-500 border-t-transparent rounded-full"
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
         />
@@ -33,7 +38,7 @@ const AdminPayment = () => {
   if (isError) {
     return (
       <p className="text-center text-red-500 mt-10">
-        Failed to load payment records
+        Failed to load payment history
       </p>
     );
   }
@@ -46,10 +51,10 @@ const AdminPayment = () => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
         className="text-xl sm:text-2xl lg:text-3xl font-bold
-                   bg-linear-to-r from-purple-600 via-indigo-500 to-blue-500
+                   bg-linear-to-r from-indigo-600 via-blue-500 to-sky-500
                    bg-clip-text text-transparent mb-6"
       >
-        All Payments (Admin)
+        Payment History
       </motion.h1>
 
       {payments.length === 0 ? (
@@ -62,7 +67,7 @@ const AdminPayment = () => {
             <thead className="bg-gray-100">
               <tr>
                 <th className="px-4 py-2 text-left">Image</th>
-                <th className="px-4 py-2 text-left">User</th>
+                <th className="px-4 py-2 text-left">Package</th>
                 <th className="px-4 py-2 text-left">Transaction</th>
                 <th className="px-4 py-2 text-left">Method</th>
                 <th className="px-4 py-2 text-left">Amount</th>
@@ -88,19 +93,19 @@ const AdminPayment = () => {
                     />
                   </td>
 
-                  {/* User Email */}
+                  {/* Package ID */}
                   <td className="px-4 py-2 text-sm text-gray-700">
-                    {pay.email}
+                    {pay.packageId}
                   </td>
 
-                  {/* Transaction ID */}
+                  {/* Transaction */}
                   <td className="px-4 py-2 text-sm text-gray-600">
                     {pay.transactionId}
                   </td>
 
                   {/* Payment Method */}
-                  <td className="px-4 py-2 capitalize">
-                    {pay.paymentMethod}
+                  <td className="px-4 py-2 ">
+                      {pay.paymentMethod}
                   </td>
 
                   {/* Amount */}
@@ -122,4 +127,4 @@ const AdminPayment = () => {
   );
 };
 
-export default AdminPayment;
+export default PaymentHistory;

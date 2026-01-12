@@ -1,8 +1,23 @@
 import { motion } from "motion/react";
+import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Overview = () => {
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
+
+  // Fetch user payments
+  const { data: payments = [] } = useQuery({
+    queryKey: ["overviewPayments", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get(
+        `/payments?email=${user.email}`
+      );
+      return res.data;
+    },
+  });
 
   return (
     <div className="min-h-[70vh] flex">
@@ -11,7 +26,7 @@ const Overview = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
         className="w-full rounded-3xl p-8 md:p-12
-                   bg-linear-to-br from-sky-500 via-blue-500 to-indigo-600
+                   bg-sky-700
                    shadow-2xl text-white"
       >
         {/* Heading */}
@@ -59,6 +74,66 @@ const Overview = () => {
         >
           Start exploring your bookings, wishlist, and upcoming adventures ✈️🌍
         </motion.p>
+
+        {/* Payment Overview Table */}
+        {payments.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, duration: 0.6 }}
+            className="mt-10 bg-blue-950 backdrop-blur-lg rounded-2xl p-5"
+          >
+            <h3 className="text-lg font-semibold mb-4 text-white">
+              Payment Overview
+            </h3>
+
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-white">
+                <thead className="bg-black/40 text-left">
+                  <tr>
+                    <th className="px-4 py-2">Image</th>
+                    <th className="px-4 py-2">Package</th>
+                    <th className="px-4 py-2">Transaction ID</th>
+                    <th className="px-4 py-2">Payment Method</th>
+                    <th className="px-4 py-2">Amount</th>
+                    <th className="px-4 py-2">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {payments.map((pay) => (
+                    <motion.tr
+                      key={pay._id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="border-b border-white/20 hover:bg-blue-900"
+                    >
+                      <td className="px-4 py-2">
+                        <img
+                          src={pay.image}
+                          alt={pay.packageName}
+                          className="w-20 h-14 rounded-lg object-cover"
+                        />
+                      </td>
+                      <td className="px-4 py-2 font-semibold">{pay.packageName}</td>
+                      <td className="px-4 py-2 text-white/80">{pay.transactionId}</td>
+                      <td className="px-4 py-2 text-white/80">{pay.paymentMethod}</td>
+                      <td className="px-4 py-2 font-semibold">${pay.amount}</td>
+                      <td className="px-4 py-2">
+                        <span
+                          className={`px-4 py-1 rounded-full text-sm font-semibold
+                    ${pay.status === "pending" ? "bg-yellow-500" : "bg-green-500"}`}
+                        >
+                          {pay.status === "pending" ? "Pending" : "Confirmed"}
+                        </span>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </motion.div>
+        )}
       </motion.div>
     </div>
   );

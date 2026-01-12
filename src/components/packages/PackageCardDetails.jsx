@@ -55,6 +55,7 @@ const PackageCardDetails = () => {
         title: packageData.title,
         price: packageData.price,
         image: packageData.image,
+        payment_status: "pending",
         createdAt: new Date(),
       });
     },

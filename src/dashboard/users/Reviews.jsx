@@ -130,7 +130,7 @@ const Reviews = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="border border-gray-300 h-80 overflow-auto rounded-xl p-5 bg-sky-100 shadow hover:shadow-2xl hover:scale-105 transition-transform duration-300"
+          className="border border-gray-300 h-full md:h-72 overflow-auto rounded-xl p-5 bg-sky-100 shadow hover:shadow-2xl hover:scale-105 transition-transform duration-300"
         >
           {/* User Info */}
           <div className="flex justify-between items-center gap-3 mb-3">

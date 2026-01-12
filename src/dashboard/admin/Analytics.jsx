@@ -53,17 +53,41 @@ const Analytics = () => {
     },
   });
 
-  const totalBookings = 324; // fake
-  const totalRevenue = 12540; // fake $
+  // 🔥 NEW: payments data
+  const { data: payments = [] } = useQuery({
+    queryKey: ["payments"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/payments");
+      return res.data;
+    },
+  });
 
- 
-  const chartData = [
-    { name: "Jan", users: 40, revenue: 240 },
-    { name: "Feb", users: 55, revenue: 320 },
-    { name: "Mar", users: 48, revenue: 280 },
-    { name: "Apr", users: 70, revenue: 420 },
-    { name: "May", users: 90, revenue: 520 },
-    { name: "Jun", users: 85, revenue: 480 },
+  // 🔢 Total bookings from payments
+  const totalBookings = payments.length;
+
+  // 💰 Total revenue from payments
+  const totalRevenue = payments.reduce(
+    (sum, item) => sum + Number(item.amount || 0),
+    0
+  );
+
+  const analyticsChartData = [
+    {
+      name: "Users",
+      value: users.length,
+    },
+    {
+      name: "Bookings",
+      value: totalBookings,
+    },
+    {
+      name: "Revenue",
+      value: totalRevenue,
+    },
+    {
+      name: "Packages",
+      value: packages.length,
+    },
   ];
 
  
@@ -89,17 +113,10 @@ const Analytics = () => {
         Admin Analytics Dashboard
       </h1>
 
+      {/* 🔥 Updated cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <StatCard
-          icon={Users}
-          title="Total Users"
-          value={users.length}
-        />
-        <StatCard
-          icon={BookOpen}
-          title="Total Bookings"
-          value={totalBookings}
-        />
+        <StatCard icon={Users} title="Total Users" value={users.length} />
+        <StatCard icon={BookOpen} title="Total Bookings" value={totalBookings} />
         <StatCard
           icon={DollarSign}
           title="Total Revenue"
@@ -119,7 +136,7 @@ const Analytics = () => {
             Popular Packages (Bookmarks)
           </h2>
 
-          <div className="overflow-x-auto w-full h-100 overflow-y-scroll rounded-2xl border border-sky-100">
+          <div className="overflow-x-auto w-full h-100 overflow-y-auto rounded-2xl border border-sky-100">
             <table className="min-w-full text-sm">
               <thead>
                 <tr className="bg-linear-to-r from-sky-100 to-blue-100 text-gray-700">
@@ -178,7 +195,7 @@ const Analytics = () => {
             Users Package Purchase
           </h2>
 
-          <div className="overflow-x-auto w-full h-100 overflow-y-scroll rounded-2xl border border-sky-100">
+          <div className="overflow-x-auto w-full h-100 overflow-y-auto rounded-2xl border border-sky-100">
             <table className="min-w-full text-sm">
               <thead>
                 <tr className="bg-linear-to-r from-sky-100 to-blue-100 text-gray-700">
@@ -229,33 +246,21 @@ const Analytics = () => {
             </table>
           </div>
         </div>
-      </div>
+        {/* 📈 Analytics Overview Chart */}
+        <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-md p-6 mb-10">
+          <h2 className="text-xl font-semibold mb-4">
+            Analytics Overview
+          </h2>
 
-      {/* =====================
-          CHART SECTION
-      ====================== */}
-      <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-md p-6">
-        <h2 className="text-xl font-semibold mb-4">
-          Growth Analytics
-        </h2>
-
-        <div className="w-full h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData}>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={analyticsChartData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
               <Line
                 type="monotone"
-                dataKey="users"
-                stroke="#0284c7"
-                strokeWidth={3}
-              />
-              <Line
-                type="monotone"
-                dataKey="revenue"
-                stroke="#22c55e"
+                dataKey="value"
                 strokeWidth={3}
               />
             </LineChart>

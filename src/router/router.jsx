@@ -31,6 +31,7 @@ import AdminRoute from "./AdminRoute";
 import AddExperienceCard from "../dashboard/admin/AddExperienceCard";
 import ExperienceCardEdit from "../dashboard/admin/ExperienceCardEdit";
 import ExperienceCardDetails from "../components/experiences/ExperienceCardDetails";
+import PaymentHistory from "../dashboard/users/PaymentHistory";
 
 const router = createBrowserRouter([
   {
@@ -84,6 +85,10 @@ const router = createBrowserRouter([
       {
         path: 'payments/:id',
         element: <PrivateRoute><Payments /></PrivateRoute>
+      },
+      {
+        path: 'payment-history',
+        element: <PrivateRoute><PaymentHistory/></PrivateRoute>
       },
       {
         path: 'reviews',
