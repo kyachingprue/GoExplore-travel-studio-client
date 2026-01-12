@@ -4,6 +4,7 @@ import PackageCard from "./PackageCard";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../LoadingSpinner";
+import { ArrowRight } from "lucide-react";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -14,6 +15,8 @@ const PackageData = () => {
   const [activeCountry, setActiveCountry] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const axiosPublic = useAxiosPublic();
+  const [searchText, setSearchText] = useState("");
+  const [priceSort, setPriceSort] = useState("");
 
   const location = useLocation();
 
@@ -54,19 +57,46 @@ const PackageData = () => {
     setCurrentPage(1);
   }, [data, location.search]);
 
-  // filter by country (button click)
   const handleCountryFilter = (country) => {
     setActiveCountry(country);
-    setCurrentPage(1);
+    applyFilters({ country });
+  };
 
-    if (country === "All") {
-      setFilteredPackages(packages);
-    } else {
-      setFilteredPackages(
-        packages.filter((item) => item.country === country)
+  const applyFilters = ({
+    country = activeCountry,
+    search = searchText,
+    sort = priceSort,
+  }) => {
+    let result = [...packages];
+
+    // country filter
+    if (country !== "All") {
+      result = result.filter((item) => item.country === country);
+    }
+
+    // search filter
+    if (search) {
+      result = result.filter(
+        (item) =>
+          item.title.toLowerCase().includes(search.toLowerCase()) ||
+          item.country.toLowerCase().includes(search.toLowerCase())
       );
     }
+
+    // price sorting
+    if (sort === "lowToHigh") {
+      result.sort((a, b) => a.price - b.price);
+    }
+
+    if (sort === "highToLow") {
+      result.sort((a, b) => b.price - a.price);
+    }
+
+    setFilteredPackages(result);
+    setCurrentPage(1);
   };
+
+
 
   if (isLoading) {
     return <LoadingSpinner/>
@@ -105,6 +135,42 @@ const PackageData = () => {
   return (
     <div className="container bg-linear-to-b from-gray-300 via-sky-200 to-white mx-auto px-4 py-10">
 
+      {/* Search & Price Filter */}
+      <div className="flex flex-wrap gap-4 justify-evenly mb-10">
+
+        {/* Search */}
+        <div className="flex items-center gap-3">
+          <h3 className="flex items-center gap-2 text-xl text-blue-950 font-bold">Search <ArrowRight/> </h3>
+          <input
+            type="text"
+            placeholder="Search packages..."
+            value={searchText}
+            onChange={(e) => {
+              setSearchText(e.target.value);
+              applyFilters({ search: e.target.value });
+            }}
+            className="px-4 py-2 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-sky-400 w-64"
+          />
+        </div>
+
+        {/* Price Sort */}
+        <div className="flex items-center gap-3">
+          <h3 className="text-lg font-medium">Sort Price</h3>
+          <select
+            value={priceSort}
+            onChange={(e) => {
+              setPriceSort(e.target.value);
+              applyFilters({ sort: e.target.value });
+            }}
+            className="px-4 py-2 rounded-md border border-gray-300 bg-white"
+          >
+            <option value="">Default</option>
+            <option value="lowToHigh">Low Price → High Price</option>
+            <option value="highToLow">High Price → Low Price</option>
+          </select>
+        </div>
+      </div>
+
       {/* Country Filter */}
       <div className="flex flex-wrap gap-3 justify-center mb-10">
         {countries.map((country, index) => (
@@ -124,7 +190,7 @@ const PackageData = () => {
 
       {/* Cards */}
       {currentItems.length === 0 ? (
-        <p className="text-center text-gray-500">
+        <p className="text-center md:py-40 text-gray-500">
           No packages found.
         </p>
       ) : (
