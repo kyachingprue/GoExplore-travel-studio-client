@@ -192,6 +192,12 @@ const Navbar = () => {
             className="bg-white/20 p-2 rounded-lg"
           >
             <LayoutDashboard size={18} />
+            {cartCount?.count > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white
+               text-xs px-1.5 rounded-full">
+                {cartCount.count}
+              </span>
+            )}
           </button>
 
           {user && (<div className="relative">
