@@ -228,7 +228,7 @@ const Navbar = () => {
 
       {/* Mobile Dropdown Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-white text-black px-6 py-4 space-y-3 shadow-lg">
+        <div className="md:hidden flex flex-col bg-white text-black md:px-6 py-4 space-y-3 shadow-lg">
           <NavLink to="/" className="px-2" onClick={() => setMenuOpen(false)}>Home</NavLink>
           <NavLink to="/about" className="px-2" onClick={() => setMenuOpen(false)}>About</NavLink>
           <NavLink to="/packages" className="px-2" onClick={() => setMenuOpen(false)}>Package</NavLink>

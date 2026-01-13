@@ -149,7 +149,7 @@ const PackageData = () => {
               setSearchText(e.target.value);
               applyFilters({ search: e.target.value });
             }}
-            className="px-4 py-2 bg-white rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400 w-64"
+            className="px-4 py-2 bg-white rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400 w-full md:w-64"
           />
         </div>
 
