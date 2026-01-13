@@ -193,7 +193,7 @@ const Navbar = () => {
           >
             <LayoutDashboard size={18} />
             {cartCount?.count > 0 && (
-              <span className="absolute -top-1 right-24 bg-red-500 text-white
+              <span className="absolute top-2 md:-top-1 right-24 md:-right-1 bg-red-500 text-white
                text-xs px-1.5 rounded-full">
                 {cartCount.count}
               </span>
