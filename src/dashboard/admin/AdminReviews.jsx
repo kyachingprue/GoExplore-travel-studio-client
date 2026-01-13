@@ -4,10 +4,12 @@ import { toast } from "react-hot-toast";
 import { motion } from "motion/react";
 import { Trash2 } from "lucide-react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const AdminReviews = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
+  useDocumentTitle("Admin Reviews");
 
   // Fetch all reviews
   const { data: reviews = [], isLoading } = useQuery({

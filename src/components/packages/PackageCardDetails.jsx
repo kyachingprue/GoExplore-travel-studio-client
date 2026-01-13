@@ -18,6 +18,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
 import PackageReviews from "./PackageReviews";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const PackageCardDetails = () => {
   const { _id } = useParams();
@@ -34,6 +35,8 @@ const PackageCardDetails = () => {
       return res.data;
     },
   });
+
+  useDocumentTitle(packageData ? packageData.title : "Package Details");
 
   const { data: userDB } = useQuery({
     queryKey: ["mongoUser", user?.email],

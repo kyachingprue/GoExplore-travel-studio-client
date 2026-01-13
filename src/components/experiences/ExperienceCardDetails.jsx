@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { ArrowLeft, MapPin, Star } from "lucide-react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import DynamicRating from "../DynamicRating";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const ExperienceCardDetails = () => {
   const { id } = useParams();
@@ -27,6 +28,8 @@ const ExperienceCardDetails = () => {
     };
     fetchExperience();
   }, [id, axiosSecure]);
+
+  useDocumentTitle(experience ? experience.title : "Experience Details");
 
   if (loading)
     return <div className="text-center py-20 text-gray-500">Loading...</div>;

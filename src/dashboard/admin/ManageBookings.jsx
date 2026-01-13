@@ -2,10 +2,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const ManageBookings = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
+  useDocumentTitle("Manage Bookings");
 
   // 🔥 Fetch payments
   const { data: payments = [], isLoading } = useQuery({

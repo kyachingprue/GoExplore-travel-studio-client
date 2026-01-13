@@ -5,12 +5,14 @@ import { motion } from "motion/react";
 import { Trash2, ShoppingCart } from "lucide-react"; 
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 
 const WishList = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
+  useDocumentTitle("My Wishlist");
 
   const { data: bookmarks = [], isLoading, isError } = useQuery({
     queryKey: ["bookmarks", user?.email],

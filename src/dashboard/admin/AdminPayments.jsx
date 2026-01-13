@@ -2,9 +2,11 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const AdminPayment = () => {
   const axiosSecure = useAxiosSecure();
+  useDocumentTitle("Admin Payments");
 
   const {
     data: payments = [],

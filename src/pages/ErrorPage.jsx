@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { Plane, MapPin, Home } from "lucide-react";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const ErrorPage = () => {
+  useDocumentTitle("404 Not Found");
   return (
     <section className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-900 via-purple-900 to-pink-900 text-white relative overflow-hidden">
 

@@ -14,11 +14,13 @@ import {
 import toast from "react-hot-toast";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import DynamicRating from "../../components/DynamicRating";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const AdminBlogs = () => {
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
+  useDocumentTitle("Admin Blogs & Experiences");
 
   const { data: experiences = [], isLoading } = useQuery({
     queryKey: ["admin-experiences"],

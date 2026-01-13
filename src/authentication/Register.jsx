@@ -8,12 +8,14 @@ import toast from "react-hot-toast";
 import useAuth from "../hooks/useAuth";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosPublic from "../hooks/useAxiosPublic";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const Register = () => {
   const { registerUser, profileUpdate, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
   const [btnLoading, setBtnLoading] = useState(false);
+  useDocumentTitle("Register")
 
   const {
     register,

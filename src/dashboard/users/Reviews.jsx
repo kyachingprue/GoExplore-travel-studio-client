@@ -5,11 +5,13 @@ import toast from "react-hot-toast";
 import { motion } from "motion/react";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const Reviews = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
+  useDocumentTitle("My Reviews");
 
   const [editingId, setEditingId] = useState(null);
   const [editComment, setEditComment] = useState("");
@@ -130,7 +132,7 @@ const Reviews = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="border border-gray-300 h-full md:h-72 overflow-auto rounded-xl p-5 bg-sky-100 shadow hover:shadow-2xl hover:scale-105 transition-transform duration-300"
+          className="border border-gray-300 h-full md:h-80 overflow-auto rounded-xl p-5 bg-sky-100 shadow hover:shadow-2xl hover:scale-105 transition-transform duration-300"
         >
           {/* User Info */}
           <div className="flex justify-between items-center gap-3 mb-3">

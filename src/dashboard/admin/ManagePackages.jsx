@@ -4,10 +4,12 @@ import { motion } from "motion/react";
 import { Edit, Trash2, Plus } from "lucide-react";
 import toast from "react-hot-toast";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const ManagePackages = () => {
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
+  useDocumentTitle("Manage Packages")
 
   const {
     data: packages = [],

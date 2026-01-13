@@ -4,9 +4,11 @@ import toast from "react-hot-toast";
 import { motion } from "motion/react";
 import { Save } from "lucide-react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const ManageUsers = () => {
   const axiosSecure = useAxiosSecure();
+  useDocumentTitle("Manage Users");
 
   // Track selected roles per user
   const [selectedRoles, setSelectedRoles] = useState({});

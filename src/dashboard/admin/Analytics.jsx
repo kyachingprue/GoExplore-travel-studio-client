@@ -16,10 +16,12 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 
 const Analytics = () => {
   const axiosSecure = useAxiosSecure();
+  useDocumentTitle("Admin Analytics Dashboard");
 
   const { data: users = [] } = useQuery({
     queryKey: ["users"],

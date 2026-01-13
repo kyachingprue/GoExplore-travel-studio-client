@@ -4,6 +4,7 @@ import { UploadCloud, Edit3 } from "lucide-react";
 import toast from "react-hot-toast";
 import useAuth from "../hooks/useAuth";
 import useAxiosSecure from "../hooks/useAxiosSecure";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const Profile = () => {
   const { user: firebaseUser } = useAuth(); // Firebase user (email, uid)
@@ -12,6 +13,7 @@ const Profile = () => {
   const [user, setUser] = useState(null); // MongoDB user
   const [coverUploading, setCoverUploading] = useState(false);
   const [profileUploading, setProfileUploading] = useState(false);
+  useDocumentTitle("Profile");
 
   // Fetch MongoDB user by email
   useEffect(() => {

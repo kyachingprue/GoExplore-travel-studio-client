@@ -18,7 +18,7 @@ import axios from "axios";
 const googleProvider = new GoogleAuthProvider();
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000",
+  baseURL: import.meta.env.VITE_API_URL || "https://world-travel-studio.vercel.app",
   withCredentials: true, // 🔴 cookie enable
 });
 

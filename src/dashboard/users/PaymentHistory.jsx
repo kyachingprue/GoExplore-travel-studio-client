@@ -3,10 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const PaymentHistory = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
+  useDocumentTitle("Payment History");
 
   const {
     data: payments = [],

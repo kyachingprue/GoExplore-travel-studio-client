@@ -3,8 +3,8 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const axiosSecure = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000",
-  withCredentials: true, // 🔴 MUST for cookie
+  baseURL: import.meta.env.VITE_API_URL || "https://world-travel-studio.vercel.app",
+  withCredentials: true,
 });
 
 const useAxiosSecure = () => {

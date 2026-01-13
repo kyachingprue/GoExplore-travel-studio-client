@@ -21,11 +21,13 @@ import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const DashboardLayout = () => {
   const { user, logoutUser } = useAuth();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
+  useDocumentTitle("Dashboard");
 
 
   const { data: dbUser, isLoading } = useQuery({

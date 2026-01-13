@@ -7,12 +7,14 @@ import useAuth from "../hooks/useAuth";
 import GoogleLoginButton from "./GoogleLoginButton";
 import toast from "react-hot-toast";
 import useAxiosSecure from "../hooks/useAxiosSecure";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const Login = () => {
   const { loginUser, loginWithGoogle, } = useAuth();
   const [btnLoading, setBtnLoading] = useState(false);
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
+  useDocumentTitle("Login")
 
   const {
     register,
