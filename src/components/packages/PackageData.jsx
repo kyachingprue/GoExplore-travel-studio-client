@@ -133,7 +133,7 @@ const PackageData = () => {
   };
 
   return (
-    <div className="container bg-linear-to-b from-gray-300 via-sky-200 to-white mx-auto px-4 py-10">
+    <div className="container bg-sky-100 mx-auto px-4 py-10">
 
       {/* Search & Price Filter */}
       <div className="flex flex-wrap gap-4 justify-evenly mb-10">
@@ -149,7 +149,7 @@ const PackageData = () => {
               setSearchText(e.target.value);
               applyFilters({ search: e.target.value });
             }}
-            className="px-4 py-2 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-sky-400 w-64"
+            className="px-4 py-2 bg-white rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400 w-64"
           />
         </div>
 

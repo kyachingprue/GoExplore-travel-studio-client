@@ -1,8 +1,9 @@
 import { motion } from "motion/react";
 import { Search, PlaneTakeoff, MapPin, Plane } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Banner = () => {
+  const navigate = useNavigate()
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden mt-12 md:mt-16">
 
@@ -97,7 +98,7 @@ const Banner = () => {
             </div>
 
             {/* Button */}
-            <button className="w-full flex items-center justify-center gap-2 bg-linear-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-semibold py-3 rounded-xl transition">
+            <button onClick={() => navigate('/packages')} className="w-full flex items-center justify-center gap-2 bg-linear-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-semibold py-3 rounded-xl transition">
               <PlaneTakeoff />
               Search Now
             </button>

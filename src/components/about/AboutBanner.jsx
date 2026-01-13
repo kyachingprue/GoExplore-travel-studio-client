@@ -8,6 +8,7 @@ import {
   MapPin,
   ArrowRight,
 } from "lucide-react";
+import StatsCounterSection from "./StatsCounterSection";
 
 const AboutBanner = () => {
   return (
@@ -116,29 +117,7 @@ const AboutBanner = () => {
       </div>
 
       {/* Stats */}
-      <div className="bg-black/40">
-        <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {[
-            { label: "Destinations", value: "120+" },
-            { label: "Happy Travelers", value: "50K+" },
-            { label: "Experiences", value: "300+" },
-            { label: "Awards", value: "25+" },
-          ].map((item, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <h3 className="text-3xl font-bold text-yellow-300">
-                {item.value}
-              </h3>
-              <p className="text-gray-300 mt-1">{item.label}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+      <StatsCounterSection/>
 
       {/* Values */}
       <div className="max-w-7xl mx-auto px-6 py-20">
@@ -169,14 +148,40 @@ const AboutBanner = () => {
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
-              className="bg-white/10 backdrop-blur-md p-8 rounded-2xl text-center"
+              transition={{ delay: i * 0.15, duration: 0.6 }}
+              whileHover={{
+                y: -12,
+                scale: 1.04,
+                boxShadow: "0 25px 50px rgba(0,0,0,0.35)",
+              }}
+              className="bg-white/10 backdrop-blur-md p-8 rounded-2xl text-center cursor-pointer"
             >
-              <div className="text-yellow-300 mx-auto mb-4">
+              {/* Icon */}
+              <motion.div
+                whileHover={{ rotate: 8, scale: 1.2 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="text-yellow-300 mx-auto mb-5 w-fit"
+              >
                 {item.icon}
-              </div>
-              <h4 className="text-xl font-semibold">{item.title}</h4>
-              <p className="text-gray-300 mt-2">{item.desc}</p>
+              </motion.div>
+
+              {/* Title */}
+              <h4 className="text-xl font-semibold">
+                {item.title}
+              </h4>
+
+              {/* Description */}
+              <p className="text-gray-300 mt-3 leading-relaxed">
+                {item.desc}
+              </p>
+
+              {/* Accent Line */}
+              <motion.div
+                initial={{ width: 0 }}
+                whileHover={{ width: "40%" }}
+                transition={{ duration: 0.4 }}
+                className="h-0.5 bg-yellow-300 mx-auto mt-6"
+              />
             </motion.div>
           ))}
         </div>

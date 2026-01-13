@@ -1,17 +1,20 @@
-import React from 'react';
-import Banner from '../components/home/Banner';
 import TravelCard from '../components/home/TravelCard';
 import CompanyCard from '../components/home/CompanyCard';
 import CardSection from '../components/home/CardSection';
 import CategoryCards from '../components/home/CategoryCards';
+import WorldTravelSection from '../components/home/WorldTravelSection';
+import TravelSwiperSection from '../components/home/TravelSwiperSection';
+import Banner from '../components/home/Banner';
 
 const Home = () => {
   return (
     <div>
-      <Banner />
+      <Banner/>
       <CompanyCard />
-      <CategoryCards/>
-      <CardSection/>
+      <CategoryCards />
+      <WorldTravelSection />
+      <CardSection />
+      <TravelSwiperSection/>
       <TravelCard />
     </div>
   );
