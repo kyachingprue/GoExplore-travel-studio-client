@@ -6,6 +6,7 @@ import { ArrowLeft, MapPin, Star } from "lucide-react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import DynamicRating from "../DynamicRating";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
+import LoadingSpinner from "../LoadingSpinner";
 
 const ExperienceCardDetails = () => {
   const { id } = useParams();
@@ -32,7 +33,7 @@ const ExperienceCardDetails = () => {
   useDocumentTitle(experience ? experience.title : "Experience Details");
 
   if (loading)
-    return <div className="text-center py-20 text-gray-500">Loading...</div>;
+    return <LoadingSpinner/>;
 
   if (!experience)
     return <div className="text-center py-20 text-red-500">Experience not found</div>;
