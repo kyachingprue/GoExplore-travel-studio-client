@@ -46,9 +46,19 @@ const PackageData = () => {
     retry: 1,
   });
 
-  const countries = useMemo(
-    () => ["All", ...new Set(packages.map((pkg) => pkg.country).filter(Boolean))],
+  const countryCounts = useMemo(
+    () =>
+      packages.reduce((counts, pkg) => {
+        if (pkg.country) {
+          counts.set(pkg.country, (counts.get(pkg.country) || 0) + 1);
+        }
+        return counts;
+      }, new Map()),
     [packages]
+  );
+  const countries = useMemo(
+    () => ["All", ...Array.from(countryCounts.keys()).sort((a, b) => a.localeCompare(b))],
+    [countryCounts]
   );
   const selectedCountry = countries.includes(activeCountry)
     ? activeCountry
@@ -197,32 +207,68 @@ const PackageData = () => {
               </span>
             </label>
 
-            <label className="block">
-              <span className="mb-2 block text-sm font-semibold text-slate-700">
-                Destination
-              </span>
-              <span className="relative block">
-                <MapPin
-                  aria-hidden="true"
-                  size={17}
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                />
-                <select
-                  value={selectedCountry}
-                  onChange={(event) => {
-                    setActiveCountry(event.target.value);
-                    setCurrentPage(1);
-                  }}
-                  className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-3 text-sm text-slate-800 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
-                >
-                  {countries.map((country) => (
-                    <option key={country} value={country}>
-                      {country}
-                    </option>
-                  ))}
-                </select>
-              </span>
-            </label>
+            <div>
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <span className="text-sm font-semibold text-slate-700">
+                  Browse countries
+                </span>
+                <span className="text-xs text-slate-400">
+                  {countryCounts.size} destinations
+                </span>
+              </div>
+              <div
+                role="group"
+                aria-label="Filter packages by country"
+                className="max-h-72 space-y-1 overflow-y-auto pr-1"
+              >
+                {countries.map((country) => {
+                  const isSelected = selectedCountry === country;
+                  const packageCount =
+                    country === "All"
+                      ? packages.length
+                      : countryCounts.get(country) || 0;
+
+                  return (
+                    <button
+                      key={country}
+                      type="button"
+                      aria-pressed={isSelected}
+                      onClick={() => {
+                        setActiveCountry(country);
+                        setCurrentPage(1);
+                      }}
+                      className={`flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition ${
+                        isSelected
+                          ? "bg-sky-800 font-semibold text-white shadow-sm"
+                          : "text-slate-600 hover:bg-sky-50 hover:text-sky-900"
+                      }`}
+                    >
+                      <span className="flex min-w-0 items-center gap-2.5">
+                        <MapPin
+                          aria-hidden="true"
+                          size={16}
+                          className={`shrink-0 ${
+                            isSelected ? "text-cyan-100" : "text-sky-600"
+                          }`}
+                        />
+                        <span className="truncate">
+                          {country === "All" ? "All countries" : country}
+                        </span>
+                      </span>
+                      <span
+                        className={`min-w-7 rounded-full px-2 py-0.5 text-center text-xs ${
+                          isSelected
+                            ? "bg-white/15 text-white"
+                            : "bg-slate-100 text-slate-500"
+                        }`}
+                      >
+                        {packageCount}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
             <div>
               <div className="mb-2 flex items-center justify-between gap-2">

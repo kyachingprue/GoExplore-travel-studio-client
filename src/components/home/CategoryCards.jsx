@@ -17,7 +17,7 @@ const CategoryCards = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold"
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold pt-10"
         >
           <span className="bg-linear-to-r from-sky-500 via-indigo-500 to-purple-600 bg-clip-text text-transparent">
             Explore Your Favorite Country
