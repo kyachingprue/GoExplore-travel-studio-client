@@ -12,42 +12,49 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="bg-linear-to-r from-indigo-900 via-purple-900 to-pink-900 text-white pt-16">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
+    <footer className="relative w-full overflow-hidden bg-linear-to-br from-slate-950 via-cyan-950 to-blue-950 text-white">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-24 -top-32 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-40 -right-20 h-80 w-80 rounded-full bg-blue-500/10 blur-3xl"
+      />
 
-        {/* Brand */}
-        <div>
-          <h2 className="text-3xl font-extrabold bg-linear-to-r from-yellow-300 via-white to-cyan-300 bg-clip-text text-transparent">
+      <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 px-6 py-16 text-center sm:grid-cols-2 lg:grid-cols-4">
+        <div className="flex flex-col items-center">
+          <h2 className="bg-linear-to-r from-amber-200 via-white to-cyan-200 bg-clip-text text-3xl font-extrabold text-transparent">
             GoExplore
           </h2>
-          <p className="mt-4 text-gray-300 text-sm leading-relaxed">
-            Discover breathtaking destinations, unforgettable experiences,
-            and eco-friendly adventures across the world with GoExplore.
+          <span className="mt-3 inline-flex items-center gap-2 rounded-full border border-cyan-200/20 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100">
+            <Plane size={14} /> Travel WorkHub
+          </span>
+          <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-300">
+            Your travel workhub for discovering new places, planning easier
+            journeys, and collecting stories worth sharing.
           </p>
-
-          <div className="flex gap-4 mt-6">
-            <Plane className="text-yellow-300" />
-            <MapPin className="text-cyan-300" />
-            <Globe className="text-pink-300" />
+          <div className="mt-6 flex items-center justify-center gap-5">
+            <Plane aria-hidden="true" className="text-amber-300" />
+            <MapPin aria-hidden="true" className="text-cyan-300" />
+            <Globe aria-hidden="true" className="text-blue-300" />
           </div>
         </div>
 
-        {/* Quick Links */}
         <div>
-          <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-          <ul className="space-y-2 text-gray-300">
-            <li><Link to="/" className="hover:text-yellow-300">Home</Link></li>
-            <li><Link to="/about" className="hover:text-yellow-300">About Us</Link></li>
-            <li><Link to="/package" className="hover:text-yellow-300">Packages</Link></li>
-            <li><Link to="/experience" className="hover:text-yellow-300">Experiences</Link></li>
-            <li><Link to="/dashboard" className="hover:text-yellow-300">Travel Dashboard</Link></li>
+          <h3 className="mb-4 text-lg font-semibold">Quick Links</h3>
+          <ul className="space-y-3 text-slate-300">
+            <li><Link to="/" className="transition hover:text-amber-200">Home</Link></li>
+            <li><Link to="/about" className="transition hover:text-amber-200">About Us</Link></li>
+            <li><Link to="/packages" className="transition hover:text-amber-200">Packages</Link></li>
+            <li><Link to="/experience" className="transition hover:text-amber-200">Experiences</Link></li>
+            <li><Link to="/dashboard/overview" className="transition hover:text-amber-200">Travel Dashboard</Link></li>
           </ul>
         </div>
 
-        {/* Popular Destinations */}
         <div>
-          <h3 className="text-lg font-semibold mb-4">Popular Destinations</h3>
-          <ul className="space-y-2 text-gray-300">
+          <h3 className="mb-4 text-lg font-semibold">Popular Destinations</h3>
+          <ul className="space-y-3 text-slate-300">
             <li>Bali, Indonesia</li>
             <li>Paris, France</li>
             <li>Maldives</li>
@@ -56,41 +63,51 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Contact */}
-        <div>
-          <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
-          <ul className="space-y-3 text-gray-300 text-sm">
-            <li className="flex items-center gap-2">
-              <MapPin size={16} /> Dhaka, Bangladesh
+        <div className="flex flex-col items-center">
+          <h3 className="mb-4 text-lg font-semibold">Contact Us</h3>
+          <ul className="space-y-3 break-words text-sm text-slate-300">
+            <li className="flex items-center justify-center gap-2">
+              <MapPin aria-hidden="true" size={16} className="shrink-0 text-cyan-300" />
+              Dhaka, Bangladesh
             </li>
-            <li className="flex items-center gap-2">
-              <Phone size={16} /> +880 1234 567 890
+            <li className="flex items-center justify-center gap-2">
+              <Phone aria-hidden="true" size={16} className="shrink-0 text-cyan-300" />
+              +880 1234 567 890
             </li>
-            <li className="flex items-center gap-2">
-              <Mail size={16} /> support@goexplore.com
+            <li className="flex items-center justify-center gap-2">
+              <Mail aria-hidden="true" size={16} className="shrink-0 text-cyan-300" />
+              <span className="break-all">support@goexplore.com</span>
             </li>
           </ul>
 
-          {/* Social */}
-          <div className="flex gap-4 mt-5">
-            <a href="#" className="hover:text-yellow-300">
-              <Facebook />
+          <div className="mt-6 flex justify-center gap-3">
+            <a
+              href="#"
+              aria-label="Facebook"
+              className="rounded-full border border-white/10 bg-white/5 p-2.5 transition hover:border-cyan-200/50 hover:bg-white/10 hover:text-amber-200"
+            >
+              <Facebook size={18} />
             </a>
-            <a href="#" className="hover:text-yellow-300">
-              <Instagram />
+            <a
+              href="#"
+              aria-label="Instagram"
+              className="rounded-full border border-white/10 bg-white/5 p-2.5 transition hover:border-cyan-200/50 hover:bg-white/10 hover:text-amber-200"
+            >
+              <Instagram size={18} />
             </a>
-            <a href="#" className="hover:text-yellow-300">
-              <Twitter />
+            <a
+              href="#"
+              aria-label="Twitter"
+              className="rounded-full border border-white/10 bg-white/5 p-2.5 transition hover:border-cyan-200/50 hover:bg-white/10 hover:text-amber-200"
+            >
+              <Twitter size={18} />
             </a>
           </div>
         </div>
       </div>
 
-      {/* Bottom */}
-      <div className="mt-14 border-t border-white/20">
-        <p className="text-center text-sm text-gray-300 py-6">
-          © {new Date().getFullYear()} GoExplore. All rights reserved.
-        </p>
+      <div className="relative border-t border-white/10 px-4 py-6 pb-24 text-center text-sm text-slate-400 sm:pb-6">
+        © {new Date().getFullYear()} GoExplore Travel WorkHub. All rights reserved.
       </div>
     </footer>
   );

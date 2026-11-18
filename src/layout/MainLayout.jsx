@@ -4,10 +4,12 @@ import Footer from '../components/Footer';
 
 const MainLayout = () => {
   return (
-    <section className='bg-sky-100'>
-      <div className='max-w-xl sm:max-w-2xl lg:max-w-5xl xl:max-w-7xl mx-auto'>
+    <section className="min-h-screen w-full bg-sky-50">
+      <div className="flex min-h-screen w-full flex-col">
         <Navbar />
-        <Outlet />
+        <main className="w-full flex-1">
+          <Outlet />
+        </main>
         <Footer />
       </div>
     </section>
