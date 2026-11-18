@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { ArrowLeft, MapPin, Star } from "lucide-react";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 import DynamicRating from "../DynamicRating";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 import LoadingSpinner from "../LoadingSpinner";
@@ -11,7 +11,7 @@ import LoadingSpinner from "../LoadingSpinner";
 const ExperienceCardDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxiosPublic();
 
   const [experience, setExperience] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,7 @@ const ExperienceCardDetails = () => {
   useEffect(() => {
     const fetchExperience = async () => {
       try {
-        const res = await axiosSecure.get(`/experiences/${id}`);
+        const res = await axiosPublic.get(`/experiences/${id}`);
         setExperience(res.data);
       } catch (err) {
         console.error(err);
@@ -28,7 +28,7 @@ const ExperienceCardDetails = () => {
       }
     };
     fetchExperience();
-  }, [id, axiosSecure]);
+  }, [id, axiosPublic]);
 
   useDocumentTitle(experience ? experience.title : "Experience Details");
 

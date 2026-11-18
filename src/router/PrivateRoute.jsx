@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
@@ -5,6 +6,12 @@ import toast from "react-hot-toast";
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      toast.error("Please Login!!");
+    }
+  }, [loading, user]);
 
   if (loading) {
     return (
@@ -15,11 +22,10 @@ const PrivateRoute = ({ children }) => {
   }
 
   if (!user) {
-    toast.error("Please Login!!");
     return (
       <Navigate
       to="/login"
-      state={{ from: location.pathname }}
+      state={{ from: location }}
       replace
       />
     );

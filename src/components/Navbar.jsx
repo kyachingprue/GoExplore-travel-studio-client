@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { motion } from 'motion/react';
 import {
   LayoutDashboard,
-  User,
   LogOut,
   MoreVertical,
+  User,
 } from "lucide-react";
 import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
-import LoadingSpinner from "./LoadingSpinner";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -24,11 +22,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > lastScrollY && window.scrollY > 80) {
-        setShow(false);
-      } else {
-        setShow(true);
-      }
+      setShow(window.scrollY <= lastScrollY || window.scrollY <= 80);
       setLastScrollY(window.scrollY);
     };
 
@@ -36,11 +30,10 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  const { data: userDB, isLoading } = useQuery({
+  const { data: userDB } = useQuery({
     queryKey: ["mongoUser", user?.email],
     queryFn: async () => {
-      if (!user?.email) return null;
-      const res = await axiosSecure.get(`/users/email/${user?.email}`);
+      const res = await axiosSecure.get(`/users/email/${user.email}`);
       return res.data;
     },
     enabled: !!user?.email,
@@ -49,205 +42,205 @@ const Navbar = () => {
 
   const { data: cartCount } = useQuery({
     queryKey: ["cartCount", user?.email],
-    enabled: !!user,
+    enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(
-        `/myPackage/count/${user.email}`
-      );
+      const res = await axiosSecure.get(`/myPackage/count/${user.email}`);
       return res.data;
     },
   });
 
-  if (isLoading) {
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      className="flex items-center justify-between px-6 py-4"
-    >
-      <div className="h-6 w-32 rounded-md bg-slate-200 animate-pulse" />
-      <div className="hidden md:flex items-center gap-6">
-        <div className="h-4 w-20 rounded bg-slate-200 animate-pulse" />
-        <div className="h-4 w-24 rounded bg-slate-200 animate-pulse" />
-        <div className="h-4 w-16 rounded bg-slate-200 animate-pulse" />
-      </div>
-
-      <div className="h-8 w-24 rounded-full bg-slate-200 animate-pulse" />
-    </motion.div>
-  }
+  const dashboardPath =
+    userDB?.role === "admin"
+      ? "/dashboard/admin/analytics"
+      : "/dashboard/overview";
 
   const handleLogout = async () => {
-    await logoutUser();
-    navigate('/')
-    toast.success("User Logout🏞️")
-    setProfileOpen(false);
-    setMenuOpen(false);
+    try {
+      await logoutUser();
+      navigate("/");
+      toast.success("User Logout🏞️");
+      setProfileOpen(false);
+      setMenuOpen(false);
+    } catch (error) {
+      toast.error(error?.message || "Logout failed");
+    }
   };
 
   const navLinkClass = ({ isActive }) =>
-    `relative px-1 pb-1 transition-all duration-300
-   ${isActive ? "text-yellow-300" : "text-white"}
-   after:absolute after:left-0 after:bottom-0 after:h-[2px]
-   after:bg-yellow-300 after:transition-all after:duration-300
-   ${isActive ? "after:w-full" : "after:w-0 hover:after:w-full"}`;
+    `relative px-1 pb-1 transition-colors duration-300 ${
+      isActive ? "text-amber-200" : "text-white hover:text-cyan-100"
+    } after:absolute after:left-0 after:bottom-0 after:h-[2px]
+    after:bg-amber-200 after:transition-all after:duration-300
+    ${isActive ? "after:w-full" : "after:w-0 hover:after:w-full"}`;
 
+  const navLinks = (
+    <>
+      <NavLink to="/" className={navLinkClass} onClick={() => setMenuOpen(false)}>
+        Home
+      </NavLink>
+      <NavLink to="/about" className={navLinkClass} onClick={() => setMenuOpen(false)}>
+        About
+      </NavLink>
+      <NavLink to="/packages" className={navLinkClass} onClick={() => setMenuOpen(false)}>
+        Packages
+      </NavLink>
+      <NavLink to="/experience" className={navLinkClass} onClick={() => setMenuOpen(false)}>
+        Experience
+      </NavLink>
+    </>
+  );
+
+  const profileMenu = (
+    <div className="absolute right-0 top-full mt-3 w-48 overflow-hidden rounded-xl bg-white py-2 text-slate-800 shadow-xl ring-1 ring-slate-900/10">
+      <button
+        onClick={() => {
+          navigate("/profile");
+          setProfileOpen(false);
+        }}
+        className="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-cyan-50"
+      >
+        <User size={17} /> Profile
+      </button>
+      <button
+        onClick={() => {
+          navigate(dashboardPath);
+          setProfileOpen(false);
+        }}
+        className="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-cyan-50"
+      >
+        <LayoutDashboard size={17} /> Dashboard
+      </button>
+      <button
+        onClick={handleLogout}
+        className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-rose-600 hover:bg-rose-50"
+      >
+        <LogOut size={17} /> Logout
+      </button>
+    </div>
+  );
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300
-      ${show ? "translate-y-0" : "-translate-y-full"}
-      bg-linear-to-r from-indigo-600 via-purple-600 to-pink-600 shadow-lg`}
+      className={`fixed left-0 top-0 z-50 w-full transition-transform duration-300 ${
+        show ? "translate-y-0" : "-translate-y-full"
+      } bg-linear-to-r from-slate-950 via-cyan-950 to-blue-900 text-white shadow-lg shadow-cyan-950/20`}
     >
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-
-        {/* Logo */}
+      <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3">
         <Link
           to="/"
-          className="text-xl md:text-3xl font-extrabold bg-linear-to-r from-yellow-300 via-white to-cyan-300 bg-clip-text text-transparent"
+          className="shrink-0 bg-linear-to-r from-amber-200 via-white to-cyan-200 bg-clip-text text-xl font-extrabold text-transparent md:text-3xl"
         >
           GoExplore
         </Link>
 
-        {/* Menu (desktop) */}
-        <div className="hidden md:flex items-center gap-6 font-medium text-white">
-          <NavLink to="/" className={navLinkClass}>
-            Home
-          </NavLink>
-          <NavLink to="/about" className={navLinkClass}>
-            About
-          </NavLink>
-          <NavLink to="/packages" className={navLinkClass}>
-            Package
-          </NavLink>
-          <NavLink to="/experience" className={navLinkClass}>
-            Experience
-          </NavLink>
+        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-7 font-medium lg:flex">
+          {navLinks}
+        </div>
 
-          {/* Travel Card */}
-          {user && <button
-            onClick={() => {
-            if (userDB?.role === "admin") {
-              navigate("/dashboard/admin/analytics");
-            } else {
-            navigate("/dashboard/overview");
-             }}}
-            className="relative bg-white/20 hover:bg-white/30 p-2 rounded-xl"
-          >
-            <LayoutDashboard />
-            {cartCount?.count > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white
-               text-xs px-1.5 rounded-full">
-                {cartCount.count}
-              </span>
-            )}
-          </button>}
-
-          {/* Auth desktop */}
-          {!user ? (
+        <div className="ml-auto hidden items-center gap-4 lg:flex">
+          {user ? (
+            <>
+              <button
+                onClick={() => navigate(dashboardPath)}
+                aria-label="Open dashboard"
+                className="relative rounded-xl bg-white/10 p-2.5 transition hover:bg-white/20"
+              >
+                <LayoutDashboard size={20} />
+                {cartCount?.count > 0 && (
+                  <span className="absolute -right-1 -top-1 rounded-full bg-rose-500 px-1.5 text-xs text-white">
+                    {cartCount.count}
+                  </span>
+                )}
+              </button>
+              <div className="relative">
+                <button
+                  type="button"
+                  aria-label="Open profile menu"
+                  aria-expanded={profileOpen}
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border-2 border-white/80 bg-white/15"
+                >
+                  {userDB?.profileImage || user.photoURL ? (
+                    <img
+                      src={userDB?.profileImage || user.photoURL}
+                      alt="Profile"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <User size={20} />
+                  )}
+                </button>
+                {profileOpen && profileMenu}
+              </div>
+            </>
+          ) : (
             <button
-              onClick={() => navigate('/login')}
-              className="bg-yellow-400 hover:bg-yellow-500 text-black px-5 py-2 rounded-xl font-semibold"
+              onClick={() => navigate("/login")}
+              className="rounded-xl bg-amber-300 px-5 py-2 font-semibold text-slate-950 transition hover:bg-amber-200"
             >
               Login
             </button>
-          ) : (
-            <div className="relative">
-              <img
-                src={userDB?.profileImage || "/default-avatar.png"}
-                className="w-10 h-10 rounded-full object-cover cursor-pointer border-2 border-white"
-                onClick={() => setProfileOpen(!profileOpen)}
-              />
-
-              {profileOpen && (
-                <div className="absolute right-0 mt-3 w-40 py-4 bg-white text-black rounded-xl shadow-lg">
-                  <button
-                    onClick={() => navigate("/profile")}
-                    className="w-full px-4 py-2 items-center flex gap-2 hover:bg-gray-100"
-                  >
-                    <User size={16} /> Profile
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full px-4 py-2 items-center flex gap-2 hover:bg-gray-100 text-red-600"
-                  >
-                    <LogOut size={16} /> Logout
-                  </button>
-                </div>
-              )}
-            </div>
           )}
         </div>
 
-        {/* Mobile Right Side */}
-        <div className="flex md:hidden items-center gap-3">
-          {/* Travel Card */}
-          <button
-            onClick={() => {
-              if (userDB?.role === "admin") {
-                navigate("/dashboard/admin/analytics");
-              } else {
-                navigate("/dashboard/overview");
-              }
-            }}
-            className="bg-white/20 p-2 rounded-lg"
-          >
-            <LayoutDashboard size={18} />
-            {cartCount?.count > 0 && (
-              <span className="absolute top-2 md:-top-1 right-24 md:-right-1 bg-red-500 text-white
-               text-xs px-1.5 rounded-full">
-                {cartCount.count}
-              </span>
-            )}
-          </button>
-
-          {user && (<div className="relative">
-            <img
-              src={userDB?.profileImage || "/default-avatar.png"}
-              className="w-8 h-8 rounded-full object-cover cursor-pointer border-2 border-white"
-              onClick={() => setProfileOpen(!profileOpen)}
-            />
-
-            {profileOpen && (
-              <div className="absolute right-0 mt-3 w-40 py-4 bg-white text-black rounded-xl shadow-lg">
+        <div className="ml-auto flex items-center gap-3 lg:hidden">
+          {user ? (
+            <>
+              <button
+                onClick={() => navigate(dashboardPath)}
+                aria-label="Open dashboard"
+                className="relative rounded-lg bg-white/10 p-2 hover:bg-white/20"
+              >
+                <LayoutDashboard size={18} />
+                {cartCount?.count > 0 && (
+                  <span className="absolute -right-1 -top-1 rounded-full bg-rose-500 px-1.5 text-xs text-white">
+                    {cartCount.count}
+                  </span>
+                )}
+              </button>
+              <div className="relative">
                 <button
-                  onClick={() => navigate("/profile")}
-                  className="w-full px-4 py-2 items-center flex gap-2 hover:bg-gray-100"
+                  type="button"
+                  aria-label="Open profile menu"
+                  aria-expanded={profileOpen}
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border-2 border-white/80 bg-white/15"
                 >
-                  <User size={16} /> Profile
+                  {userDB?.profileImage || user.photoURL ? (
+                    <img
+                      src={userDB?.profileImage || user.photoURL}
+                      alt="Profile"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <User size={18} />
+                  )}
                 </button>
-                <button
-                  onClick={handleLogout}
-                  className="w-full px-4 py-2 items-center flex gap-2 hover:bg-gray-100 text-red-600"
-                >
-                  <LogOut size={16} /> Logout
-                </button>
+                {profileOpen && profileMenu}
               </div>
-            )}
-          </div>)}
-
-          {/* 3 dot menu */}
-          <button onClick={() => setMenuOpen(!menuOpen)}>
+            </>
+          ) : (
+            <button
+              onClick={() => navigate("/login")}
+              className="rounded-lg bg-amber-300 px-4 py-2 font-semibold text-slate-950"
+            >
+              Login
+            </button>
+          )}
+          <button
+            type="button"
+            aria-label="Toggle navigation menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
             <MoreVertical className="text-white" />
           </button>
         </div>
       </div>
 
-      {/* Mobile Dropdown Menu */}
       {menuOpen && (
-        <div className="md:hidden flex flex-col bg-white text-black md:px-6 py-4 space-y-3 shadow-lg">
-          <NavLink to="/" className="px-2" onClick={() => setMenuOpen(false)}>Home</NavLink>
-          <NavLink to="/about" className="px-2" onClick={() => setMenuOpen(false)}>About</NavLink>
-          <NavLink to="/packages" className="px-2" onClick={() => setMenuOpen(false)}>Package</NavLink>
-          <NavLink to="/experience" className="px-2" onClick={() => setMenuOpen(false)}>Experience</NavLink>
-
-          {!user && (
-            <button
-              onClick={() => navigate('/login')}
-              className="w-full bg-yellow-400 py-2 mt-3 rounded-lg font-semibold"
-            >
-              Login
-            </button>
-          )}
+        <div className="flex flex-col gap-4 border-t border-white/10 bg-slate-950/95 px-6 py-4 lg:hidden">
+          {navLinks}
         </div>
       )}
     </nav>

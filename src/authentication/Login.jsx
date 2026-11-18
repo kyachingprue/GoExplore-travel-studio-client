@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { Loader2 } from "lucide-react";
 import useAuth from "../hooks/useAuth";
@@ -13,6 +13,7 @@ const Login = () => {
   const { loginUser, loginWithGoogle, } = useAuth();
   const [btnLoading, setBtnLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const axiosSecure = useAxiosSecure();
   useDocumentTitle("Login")
 
@@ -52,7 +53,7 @@ const Login = () => {
 
       // 5️⃣ Login successful
       toast.success("Login successful!");
-      navigate("/"); 
+      navigate(location.state?.from?.pathname || location.state?.from || "/");
 
     } catch (error) {
       console.error("error message",error);

@@ -1,14 +1,17 @@
 import { useState, useMemo } from "react";
 import { Star, MessageSquareText, Send, User } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const PackageReviews = ({ packageId, packageTitle, packageImage }) => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxiosPublic();
+  const location = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -19,7 +22,7 @@ const PackageReviews = ({ packageId, packageTitle, packageImage }) => {
   const { data: reviews = [], isLoading } = useQuery({
     queryKey: ["reviews", packageId],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/reviews?packageId=${packageId}`);
+      const res = await axiosPublic.get(`/reviews?packageId=${packageId}`);
       return res.data;
     },
   });
@@ -59,7 +62,7 @@ const PackageReviews = ({ packageId, packageTitle, packageImage }) => {
   const handleSubmit = () => {
     if (!user) {
       toast.error("Please login to submit a review");
-      navigate("/login");
+      navigate("/login", { state: { from: location.pathname } });
       return;
     }
 

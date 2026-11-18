@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "motion/react";
 import {
   MapPin,
@@ -24,6 +24,7 @@ const PackageCardDetails = () => {
   const { _id } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const axiosPublic = useAxiosPublic();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
@@ -117,7 +118,7 @@ const PackageCardDetails = () => {
   const handleAuthRequired = () => {
     if (!user) {
       toast.error("Please login first 🔐");
-      navigate("/login", { replace: true });
+      navigate("/login", { state: { from: location } });
       return false;
     }
     return true;

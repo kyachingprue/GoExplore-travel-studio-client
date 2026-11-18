@@ -4,17 +4,17 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { MapPin, Eye, Loader2 } from "lucide-react";
 import DynamicRating from "../DynamicRating";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const ExperienceCard = () => {
   const navigate = useNavigate();
-  const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxiosPublic();
 
   // Fetch experiences from server
   const { data: experiences = [], isLoading, isError } = useQuery({
     queryKey: ["experiences"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/experiences");
+      const res = await axiosPublic.get("/experiences");
       return res.data;
     },
   });
